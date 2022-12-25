@@ -1,25 +1,29 @@
 import json
 from dao.IEItem import IEItem
 import os
+from GLOBAL_DEFINE import CONFIG_DIR,CONFIG_FILE
+from logging_module import BaseLogger
 
 class Parameters(IEItem):
     def __init__(self):
-        self.DB_PATH="/config/XNT.db"
+        self.DB_PATH=CONFIG_DIR+"/XNT.db"
         self.ARIA2_RPC_SERVER="http://127.0.0.1:6800/jsonrpc"
         self.ARIA2_JSONRPC_TOKEN=""
-        self.LOG_DIR="/config/logs/"
+        self.LOG_DIR=CONFIG_DIR+"/logs/"
         self.LOG_LEVEL="ERROR"
         self.JACKETT_API_LINK_LIST=[]
         self.ERROR_RETRY_SPAN=2
         self.REGULAR_CHECK_SPAN=6
-        self.FILTER_DICT={"default":{"reject_rules":["720"],"apply_rules":["1080"]}}
+        self.FILTER_DICTS={"default":{"reject_rules":["720"],"apply_rules":["1080"]}}
         self.other={}
         super().__init__()
+        self.fetch()
 
-    def fetch(self,file_path="/config/config.json"):
-        if not os.path.exists("/config"):
-            os.mkdir("/config")
+    def fetch(self,file_path=CONFIG_FILE):
+        if not os.path.exists(CONFIG_DIR):
+            os.mkdir(CONFIG_DIR)
         if not os.path.exists(file_path):
+            print(file_path)
             open(file_path, "w").close()
         with open(file_path,"r",encoding="utf8") as fp:
             try:
@@ -27,12 +31,9 @@ class Parameters(IEItem):
             except Exception:
                 paras_json = ""
         if not paras_json:
-            from dto.SqliteDB import DBManipulator
-            from logging_module import Logger
             if not os.path.exists(self.LOG_DIR):
                 os.mkdir(self.LOG_DIR)
-                Logger(self.LOG_DIR,self.LOG_LEVEL).error("No Valid Config, using default.")
-            DBManipulator(self.DB_PATH)
+                BaseLogger(self.LOG_DIR,self.LOG_LEVEL).error("No Valid Config, using default.")
             self.push(file_path)
         else:
             self.DB_PATH = paras_json.get('DB_PATH', self.DB_PATH)
@@ -46,7 +47,7 @@ class Parameters(IEItem):
             self.FILTER_DICTS = paras_json.get('FILTER_DICTS', self.FILTER_DICTS)
             self.other = paras_json.get('other',self.other)
 
-    def push(self,file_path="/config/config.json"):
+    def push(self,file_path=CONFIG_FILE):
         with open(file_path, "w") as fp:
             paras_json = {
                 'DB_PATH': self.DB_PATH,
@@ -61,12 +62,10 @@ class Parameters(IEItem):
                 'other': self.other
             }
             json.dump(paras_json, fp)
-            from logging_module import Logger
-            Logger().info("Parameters are Saved.")
+            BaseLogger(self.LOG_DIR,self.LOG_LEVEL).info("Parameters are Saved.")
 
 def tryParseInt(input:str)->int:
     try:
         return int(input)
     except ValueError:
         return 0
-

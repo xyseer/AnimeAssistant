@@ -1,13 +1,8 @@
 from loguru import logger
 from os import path
-from parameters import Parameters
 
-class Logger:
-    def __init__(self,log_dir:str="",log_level:str=""):
-        if not log_dir:
-            p=Parameters()
-            log_dir=p.LOG_DIR
-            log_level=p.LOG_LEVEL
+class BaseLogger:
+    def __init__(self,log_dir:str,log_level:str):
         log_file=path.join(log_dir,"{time:YY-MM-DD}.log")
         self.logger=writelogger(log_file,log_level)
     def info(self,__message,*args,**kwargs):
@@ -30,3 +25,10 @@ def check_level_valid(loglevel:str):
         return "DEBUG"
     else:
         return loglevel
+
+class Logger(BaseLogger):
+    def __init__(self):
+        from parameters import Parameters
+        p=Parameters()
+        BaseLogger.__init__(p.LOG_DIR,p.LOG_LEVEL)
+        del p
