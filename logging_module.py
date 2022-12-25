@@ -30,5 +30,5 @@ class Logger(BaseLogger):
     def __init__(self):
         from parameters import Parameters
         p=Parameters()
-        BaseLogger.__init__(p.LOG_DIR,p.LOG_LEVEL)
+        super().__init__(p.LOG_DIR,p.LOG_LEVEL)
         del p
