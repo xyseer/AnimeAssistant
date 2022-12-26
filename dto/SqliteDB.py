@@ -10,6 +10,7 @@ class DBManipulator:
             dbpath=Parameters().DB_PATH
         self.con=sqlite3.connect(dbpath)
         self.createNew()
+        self.get_cursor().execute("PRAGMA foreign_keys = true;")
 
     def execute(self,sql:str)->sqlite3.Cursor:
         cur =self.con.cursor()
