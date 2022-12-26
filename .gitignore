@@ -3,6 +3,8 @@
 node_modules
 /dist
 /venv
+*.db
+/config
 
 # local env files
 .env.local
