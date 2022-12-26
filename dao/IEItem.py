@@ -8,6 +8,9 @@ class IEItem:
         self.id = id
         self.name = name
 
+    def __repr__(self):
+        return f"{(self.id,self.name)}"
+
     def fetch(self) -> _T:
         return self
 
