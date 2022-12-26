@@ -1,4 +1,4 @@
-from IEItem import IEItem
+from dao.IEItem import IEItem
 from datetime import datetime
 from typing import TypeVar
 from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT

@@ -1,4 +1,4 @@
-from IEItem import IEItem
+from dao.IEItem import IEItem
 from typing import TypeVar
 from dto.SqliteDB import DBManipulator
 
