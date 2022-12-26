@@ -35,6 +35,8 @@ class SubscriptionItem(IEItem):
         return f"{self.id, self.name, self.starttime.strftime(UNIFIED_TIME_FORMAT), self.totalEpisodes, self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.lastUpdateEP, self.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.nextUpdateEP, self.span, self.type}"
 
     def fetch(self) -> _T:
+        if self.id == -1:
+            return self
         ss = DBManipulator()
         item_from_db = ss.get_cursor().execute("SELECT * FROM SubscriptionItem WHERE id=?;", (self.id,)).fetchone()
         del ss

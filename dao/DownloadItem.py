@@ -43,6 +43,8 @@ class DownloadItem(IEItem):
         return f"{self.id, self.name, self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.lastUpdateEP, self.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.nextUpdateEP, self.span, self.type, self.source, self.directory, self.filter_name}"
 
     def fetch(self) -> _T:
+        if self.id == -1:
+            return self
         ss = DBManipulator()
         item_from_db = ss.get_cursor().execute("SELECT * FROM DownloadItem WHERE id=?;", (self.id,)).fetchone()
         del ss
