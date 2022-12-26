@@ -70,7 +70,7 @@ class DownloadItem(IEItem):
         if self.id == -1:
             return self
         ss = DBManipulator()
-        if not ss.get_cursor().execute("SELECT * FROM SubscriptionItem WHERE id=?", (self.id,)).fetchone():
+        if not ss.get_cursor().execute("SELECT * FROM DownloadItem WHERE id=?", (self.id,)).fetchone():
             ss.get_cursor().execute("INSERT INTO nameTable(id,name) VALUES(?,?);", (self.id, self.name))
             ss.get_cursor().execute("INSERT INTO subscriptionTable VALUES(?,?,?,?,?,?,?,?,?);", (
                 self.id, datetime.now().strftime(UNIFIED_TIME_FORMAT), self.nextUpdateEP,
