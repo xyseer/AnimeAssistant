@@ -6,7 +6,7 @@ from dao.DownloadItem import DownloadItem
 from parameters import Parameters
 from download_tools.IEDownloadMethod import IEDownloadMethod
 from logging_module import Logger
-from download_tools.aria2_tools import Aria2
+from download_tools.Aria2 import Aria2
 
 
 class Jackett(IEDownloadMethod):
