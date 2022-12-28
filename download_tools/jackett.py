@@ -61,15 +61,18 @@ def format_episode_str(ep: int):
 
 
 def checkExist(directory, ep, filter_dict):
-    files = os.listdir(directory)
-    for file in files:
-        file_name = re.sub("([^.]\w*$)", "", file)
-        if file_name == "" or file_name == ".":
-            continue
-        else:
-            if resolve_regex_match(file_name, ep, filter_dict):
-                return True
-    return False
+    try:
+        files = os.listdir(directory)
+        for file in files:
+            file_name = re.sub("([^.]\w*$)", "", file)
+            if file_name == "" or file_name == ".":
+                continue
+            else:
+                if resolve_regex_match(file_name, ep, filter_dict):
+                    return True
+        return False
+    except FileNotFoundError:
+        return False
 
 
 def resolve_regex_match(title, ep: str, filter_dict):
