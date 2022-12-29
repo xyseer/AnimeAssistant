@@ -17,7 +17,7 @@ class BaseLogger:
         logger.remove()
 
 def writelogger(log_file:str,log_level:str):
-    logger.add(log_file,encoding="utf-8", rotation="00:00",retention="10 days",level=check_level_valid(log_level),format='<green>[{time:HH:mm:ss}]</green>[<cyan>{thread.name}</cyan>:<cyan>{module}</cyan>] <level>{level}</level>:<level>{message}</level>')
+    logger.add(log_file,encoding="utf-8", rotation="00:00",retention="10 days",level=check_level_valid(log_level),format='<green>[{time:HH:mm:ss}]</green>[<cyan>{thread.name}</cyan>] <level>{level}</level>:<level>{message}</level>')
     return logger
 
 def check_level_valid(loglevel:str):
@@ -30,5 +30,6 @@ class Logger(BaseLogger):
     def __init__(self):
         from parameters import Parameters
         p=Parameters()
+        logger.remove()
         super().__init__(p.LOG_DIR,p.LOG_LEVEL)
         del p
