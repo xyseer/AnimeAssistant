@@ -21,6 +21,9 @@ class MetadataItem(IEItem):
     def __repr__(self):
         return f"{self.id, self.name, self.img, self.info}"
 
+    def get_dict(self) -> dict:
+        return {"id": self.id, "name": self.name, "img": self.img, "info": self.info, "animedb_id": self.animedb_id}
+
     def fetch(self) -> _T:
         if self.id == -1:
             return self

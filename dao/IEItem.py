@@ -9,7 +9,10 @@ class IEItem:
         self.name = name
 
     def __repr__(self):
-        return f"{(self.id,self.name)}"
+        return f"{(self.id, self.name)}"
+
+    def get_dict(self) -> dict:
+        return {"id": self.id, "name": self.name}
 
     def fetch(self) -> _T:
         return self

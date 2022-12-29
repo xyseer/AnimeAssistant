@@ -34,6 +34,18 @@ class SubscriptionItem(IEItem):
     def __repr__(self):
         return f"{self.id, self.name, self.starttime.strftime(UNIFIED_TIME_FORMAT), self.totalEpisodes, self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.lastUpdateEP, self.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.nextUpdateEP, self.span, self.type}"
 
+    def get_dict(self)->dict:
+        return {"id": self.id,
+                "name": self.name,
+                "starttime": self.starttime.strftime(UNIFIED_TIME_FORMAT),
+                "totalEpisodes": self.totalEpisodes,
+                "lastUpdateTime": self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT),
+                "lastUpdateEP": self.lastUpdateEP,
+                "nextUpdateTime": self.nextUpdateTime,
+                "nextUpdateEP": self.nextUpdateEP,
+                "span": self.span,
+                "type": self.type}
+
     def fetch(self) -> _T:
         if self.id == -1:
             return self
