@@ -14,6 +14,11 @@ class IEItem:
     def get_dict(self) -> dict:
         return {"id": self.id, "name": self.name}
 
+    def from_dict(self, source_dict: dict) -> _T:
+        self.id = source_dict.get("id", -1)
+        self.name = source_dict.get("name", "")
+        return self
+
     def fetch(self) -> _T:
         return self
 

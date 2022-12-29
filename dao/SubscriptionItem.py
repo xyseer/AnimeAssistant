@@ -34,7 +34,7 @@ class SubscriptionItem(IEItem):
     def __repr__(self):
         return f"{self.id, self.name, self.starttime.strftime(UNIFIED_TIME_FORMAT), self.totalEpisodes, self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.lastUpdateEP, self.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.nextUpdateEP, self.span, self.type}"
 
-    def get_dict(self)->dict:
+    def get_dict(self) -> dict:
         return {"id": self.id,
                 "name": self.name,
                 "starttime": self.starttime.strftime(UNIFIED_TIME_FORMAT),
@@ -45,6 +45,19 @@ class SubscriptionItem(IEItem):
                 "nextUpdateEP": self.nextUpdateEP,
                 "span": self.span,
                 "type": self.type}
+
+    def from_dict(self, source_dict: dict) -> _T:
+        self.id = source_dict.get("id", self.id)
+        self.name = source_dict.get("name", self.name)
+        self.starttime = source_dict.get("starttime", self.starttime)
+        self.totalEpisodes = source_dict.get("totalEpisodes", self.totalEpisodes)
+        self.lastUpdateTime = source_dict.get("lastUpdateTime", self.lastUpdateTime)
+        self.lastUpdateEP = source_dict.get("lastUpdateEP", self.lastUpdateEP)
+        self.nextUpdateTime = source_dict.get("nextUpdateTime", self.nextUpdateTime)
+        self.nextUpdateEP = source_dict.get("nextUpdateEP", self.nextUpdateEP)
+        self.span = source_dict.get("span", self.span)
+        self.type = source_dict.get("type", self.type)
+        return self
 
     def fetch(self) -> _T:
         if self.id == -1:

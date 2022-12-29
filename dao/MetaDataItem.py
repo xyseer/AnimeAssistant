@@ -24,6 +24,14 @@ class MetadataItem(IEItem):
     def get_dict(self) -> dict:
         return {"id": self.id, "name": self.name, "img": self.img, "info": self.info, "animedb_id": self.animedb_id}
 
+    def from_dict(self, source_dict: dict) -> _T:
+        self.id = source_dict.get("id", self.id)
+        self.name = source_dict.get("name", self.name)
+        self.img = source_dict.get("img", self.img)
+        self.info = source_dict.get("info", self.info)
+        self.animedb_id = source_dict.get("animedb_id", self.animedb_id)
+        return self
+
     def fetch(self) -> _T:
         if self.id == -1:
             return self

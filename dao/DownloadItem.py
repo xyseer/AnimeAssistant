@@ -56,6 +56,29 @@ class DownloadItem(IEItem):
                 "filter_name": self.filter_name,
                 "related_item": self.related_item.__module__}
 
+    def from_dict(self, source_dict: dict) -> _T:
+        self.id = source_dict.get("id", self.id)
+        self.name = source_dict.get("name", self.name)
+        self.lastUpdateTime = source_dict.get("lastUpdateTime", self.lastUpdateTime)
+        self.lastUpdateEP = source_dict.get("lastUpdateEP", self.lastUpdateEP)
+        self.nextUpdateTime = source_dict.get("nextUpdateTime", self.nextUpdateTime)
+        self.nextUpdateEP = source_dict.get("nextUpdateEP", self.nextUpdateEP)
+        self.span = source_dict.get("span", self.span)
+        self.type = source_dict.get("type", self.type)
+        self.source = source_dict.get("source", self.source)
+        self.directory = source_dict.get("directory", self.directory)
+        self.filter_name = source_dict.get("filter_name", self.filter_name)
+        related_item = source_dict.get("related_item", self.related_item.__module__)
+        if related_item:
+            try:
+                self.related_item = getattr(getattr(__import__(related_item), related_item.split(".")[-1], IEItem),
+                                            related_item.split(".")[-1], IEItem)(self.id)
+            except ModuleNotFoundError or AttributeError:
+                self.related_item = IEItem(self.id)
+        else:
+            self.related_item = IEItem(self.id)
+        return self
+
     def fetch(self) -> _T:
         if self.id == -1:
             return self
