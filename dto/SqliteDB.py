@@ -1,6 +1,5 @@
 import sqlite3
 from logging_module import Logger
-import time
 from parameters import Parameters
 
 
