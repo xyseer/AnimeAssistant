@@ -108,8 +108,21 @@ def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, S
 def delete_item(item_id: int, session: str = "defaultvalue") -> bool:
     n_m = NameItem(item_id)
     if check_operation_is_legal(session, n_m.user_level):
-        NameItem.deleteItem()
+        n_m.deleteItem()
         del n_m
+        return True
+    else:
+        return False
+
+
+def modify_item(new_dict: dict, session: str = "defaultvalue") -> bool:
+    if new_dict.get("id", -1) < 0:
+        return False
+    if check_operation_is_legal(session, 3):
+        id = new_dict.get("id", -1)
+        SubscriptionItem(id).from_dict(new_dict).push()
+        DownloadItem(id).from_dict(new_dict).push()
+        MetadataItem(id).from_dict(new_dict).push()
         return True
     else:
         return False
