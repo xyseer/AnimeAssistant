@@ -1,5 +1,7 @@
 /*
- Source Server         : animedatabase
+ Navicat Premium Data Transfer
+
+ Source Server         : newtest
  Source Server Type    : SQLite
  Source Server Version : 3035005
  Source Schema         : main
@@ -8,6 +10,7 @@
  Target Server Version : 3035005
  File Encoding         : 65001
 
+ Date: 29/12/2022 20:03:21
 */
 
 PRAGMA foreign_keys = false;
@@ -15,6 +18,7 @@ PRAGMA foreign_keys = false;
 -- ----------------------------
 -- Table structure for categoryMap
 -- ----------------------------
+DROP TABLE IF EXISTS "categoryMap";
 CREATE TABLE "categoryMap" (
   "id" INTEGER NOT NULL,
   "Anime" integer NOT NULL ON CONFLICT REPLACE DEFAULT 0,
@@ -25,6 +29,7 @@ CREATE TABLE "categoryMap" (
 -- ----------------------------
 -- Table structure for downloadTable
 -- ----------------------------
+DROP TABLE IF EXISTS "downloadTable";
 CREATE TABLE "downloadTable" (
   "id" integer NOT NULL ON CONFLICT ABORT,
   "source" text,
@@ -38,6 +43,7 @@ CREATE TABLE "downloadTable" (
 -- ----------------------------
 -- Table structure for metadataTable
 -- ----------------------------
+DROP TABLE IF EXISTS "metadataTable";
 CREATE TABLE "metadataTable" (
   "id" integer NOT NULL ON CONFLICT ABORT COLLATE BINARY,
   "img" text DEFAULT "/config/assets/default.jpg",
@@ -50,6 +56,7 @@ CREATE TABLE "metadataTable" (
 -- ----------------------------
 -- Table structure for nameTable
 -- ----------------------------
+DROP TABLE IF EXISTS "nameTable";
 CREATE TABLE "nameTable" (
   "id" integer NOT NULL ON CONFLICT ABORT COLLATE BINARY PRIMARY KEY AUTOINCREMENT,
   "name" text NOT NULL ON CONFLICT ABORT DEFAULT "new Series",
@@ -90,8 +97,9 @@ CREATE TABLE "userTable" (
   "username" text NOT NULL ON CONFLICT ABORT,
   "passwd" text NOT NULL,
   "session" text,
+  "valid_until" text,
   CONSTRAINT "username" PRIMARY KEY ("username") ON CONFLICT ABORT,
-  CONSTRAINT "session_unique" UNIQUE ("session") ON CONFLICT REPLACE,
+  CONSTRAINT "session_unique" UNIQUE ("session" ASC) ON CONFLICT REPLACE,
   CONSTRAINT "level" CHECK (user_level>0 and user_level<5)
 );
 
@@ -175,6 +183,6 @@ ORDER BY
 -- ----------------------------
 -- Auto increment value for nameTable
 -- ----------------------------
-UPDATE "main"."sqlite_sequence" SET seq = 1 WHERE name = 'nameTable';
+UPDATE "main"."sqlite_sequence" SET seq = 14 WHERE name = 'nameTable';
 
 PRAGMA foreign_keys = true;

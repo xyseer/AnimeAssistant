@@ -105,6 +105,7 @@ class DBManipulator:
               "username" text NOT NULL ON CONFLICT ABORT,
               "passwd" text NOT NULL,
               "session" text,
+              "valid_until" text,
               CONSTRAINT "username" PRIMARY KEY ("username") ON CONFLICT ABORT,
               CONSTRAINT "session_unique" UNIQUE ("session") ON CONFLICT REPLACE,
               CONSTRAINT "level" CHECK (user_level>0 and user_level<5)
