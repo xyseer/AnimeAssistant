@@ -4,6 +4,7 @@ from typing import TypeVar
 from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT
 from dto.SqliteDB import DBManipulator
 from dto.dbTools import convert_datetime
+from dao.NameItem import NameItem
 
 _T = TypeVar('_T', bound="SubscriptionItem")
 
@@ -81,9 +82,9 @@ class SubscriptionItem(IEItem):
     def push(self) -> _T:
         if self.id == -1:
             return self
+        NameItem(self.id,self.name).push()
         ss = DBManipulator()
         if not ss.get_cursor().execute("SELECT * FROM SubscriptionItem WHERE id=?", (self.id,)).fetchone():
-            ss.get_cursor().execute("INSERT INTO nameTable(id,name) VALUES(?,?);", (self.id, self.name))
             ss.get_cursor().execute("INSERT INTO subscriptionTable VALUES(?,?,?,?,?,?,?,?,?);", (
                 self.id, self.starttime.strftime(UNIFIED_TIME_FORMAT), self.totalEpisodes,
                 self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.lastUpdateEP,
@@ -92,7 +93,6 @@ class SubscriptionItem(IEItem):
             del ss
             return self
         else:
-            ss.get_cursor().execute("UPDATE nameTable SET name=? WHERE id=?;", (self.name, self.id))
             ss.get_cursor().execute(
                 "UPDATE subscriptionTable SET starttime=?,totalEpisodes=?,lastUpdateTime=?,lastUpdateEP=?,nextUpdateTime=?,nextUpdateEP=?,span=?,type=? WHERE id=?;",
                 (self.starttime.strftime(UNIFIED_TIME_FORMAT), self.totalEpisodes,
