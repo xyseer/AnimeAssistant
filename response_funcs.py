@@ -2,10 +2,48 @@ import json
 from dto.dbTools import *
 from dao.dataItems import *
 from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT, VERSION_INFO
+from dto.SqliteDB import DBManipulator
+import random
+import string
+from datetime import timedelta
 
 
-def login(username: str, passwd: str) -> int:
-    pass  # for version<1.0, no login method required
+def login_by_passwd(username: str, passwd: str) -> str:
+    ss = DBManipulator()
+    user = ss.get_cursor().execute("SELECT * FROM userTable where username=? and passwd=?;",
+                                   (username, passwd)).fetchone()
+    if not user:
+        return ""
+    if user[4] == "" or user[3] == "":
+        session = "".join(random.sample(string.ascii_letters, 9))
+        valid = (datetime.now() + timedelta(weeks=1)).strftime(UNIFIED_TIME_FORMAT)
+        ss.get_cursor().execute("UPDATE userTable set session=?,valid_until=?; WHERE ", (session, valid))
+        return session
+    if datetime.strptime(user[4], UNIFIED_TIME_FORMAT) < datetime.now():
+        session = "".join(random.sample(string.ascii_letters, 9))
+        valid = (datetime.now() + timedelta(weeks=1)).strftime(UNIFIED_TIME_FORMAT)
+        ss.get_cursor().execute("UPDATE userTable set session=?,valid_until=?; WHERE ", (session, valid))
+        return session
+    else:
+        return user[3]
+
+
+def check_operation_is_legal(session: str, required_min_level: int) -> bool:
+    if len(session) < 9:
+        return False
+    if float(VERSION_INFO[0:3]) < 1.0:
+        return True  # for version<1.0 , no login function is using, then this check method always return True
+    ss = DBManipulator()
+    user = ss.get_cursor().execute("SELECT session,valid_until,user_level FROM userTable where session=?;",
+                                   (session,)).fetchone()
+    if not user:
+        return False
+    if datetime.strptime(user[1], UNIFIED_TIME_FORMAT) < datetime.now():
+        return False
+    if user[2] < required_min_level and (0 < user[2] < 5):
+        return True
+    else:
+        return False
 
 
 def get_all_metadata() -> str:
@@ -42,13 +80,36 @@ def get_subscription_item(id: int) -> str:
                      "subscription_item": subscription_item.get_dict()}
     return json.dumps(response_dict)
 
-def get_about_info()->str:
-    about_info=f"xy-nas-tool/AnimeAssistant\n" \
-               f"Version:{VERSION_INFO}\n" \
-               f"Original Project Repo in Github: xyseer/AnimeAssistant\n" \
-               f"Original Docker Image Repo in DockerHub: xyseer/AnimeAssistant\n" \
-               f"Any issue please let me know on Github Project!"
+
+def get_about_info() -> str:  # for about method
+    about_info = f"xy-nas-tool/AnimeAssistant\n" \
+                 f"Version:{VERSION_INFO}\n" \
+                 f"Original Project Repo in Github: xyseer/AnimeAssistant\n" \
+                 f"Original Docker Image Repo in DockerHub: xyseer/AnimeAssistant\n" \
+                 f"Any issue please let me know on Github Project!"
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "about_info": about_info}
     return json.dumps(response_dict)
+
+
+def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, SubscriptionItem]:  # for add method
+    if check_operation_is_legal(session, 3):
+        new_id = getValidID()
+        NameItem(new_id, f"new series {new_id}")
+        s = SubscriptionItem(new_id, f"new series {new_id}")
+        DownloadItem(new_id, f"new series {new_id}")
+        m = MetadataItem(new_id, f"new series {new_id}", info="no information.")
+        return [m, s]
+    else:
+        return None
+
+
+def delete_item(item_id: int, session: str = "defaultvalue") -> bool:
+    n_m = NameItem(item_id)
+    if check_operation_is_legal(session, n_m.user_level):
+        NameItem.deleteItem()
+        del n_m
+        return True
+    else:
+        return False
