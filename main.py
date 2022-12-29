@@ -9,6 +9,7 @@ import string
 import requests
 import re
 import xml.etree.ElementTree
+from tzlocal import get_localzone
 
 from launcher import main
 
