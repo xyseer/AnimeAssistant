@@ -37,7 +37,7 @@ def getValidID():
     if not seq_tuple:
         seq = 1
     else:
-        seq = seq_tuple[0]
+        seq = seq_tuple[0] + 1
     return seq
 
 
