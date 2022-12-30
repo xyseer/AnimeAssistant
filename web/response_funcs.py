@@ -77,6 +77,9 @@ def get_current_metadata() -> str:
 
 
 def get_subscription_item(id: int) -> str:
+    if not (0 < id < getValidID()):
+        return json.dumps({"status": 404, "auth": f"xy-nas-tools {VERSION_INFO}",
+                     "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC"})
     subscription_item = SubscriptionItem(id)
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
@@ -109,6 +112,8 @@ def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, S
 
 
 def delete_item(item_id: int, session: str = "defaultvalue") -> bool:
+    if not (0 < item_id < getValidID()):
+        return False
     n_m = NameItem(item_id)
     if check_operation_is_legal(session, n_m.user_level):
         n_m.deleteItem()
