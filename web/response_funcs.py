@@ -55,7 +55,7 @@ def get_all_metadata() -> str:
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "metadata_dict_list": metadata_dict_list}
-    return json.dumps(response_dict)
+    return json.dumps(response_dict,ensure_ascii=False)
 
 
 def get_current_metadata() -> str:
@@ -70,7 +70,7 @@ def get_current_metadata() -> str:
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "metadata_dict_list": metadata_dict_list}
-    return json.dumps(response_dict)
+    return json.dumps(response_dict,ensure_ascii=False)
 
 
 def get_subscription_item(id: int) -> str:
@@ -78,7 +78,7 @@ def get_subscription_item(id: int) -> str:
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "subscription_item": subscription_item.get_dict()}
-    return json.dumps(response_dict)
+    return json.dumps(response_dict,ensure_ascii=False)
 
 
 def get_about_info() -> str:  # for about method
@@ -90,7 +90,7 @@ def get_about_info() -> str:  # for about method
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "about_info": about_info}
-    return json.dumps(response_dict)
+    return json.dumps(response_dict,ensure_ascii=False)
 
 
 def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, SubscriptionItem]:  # for add method
