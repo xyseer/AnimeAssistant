@@ -1,4 +1,5 @@
 import json
+import threading
 from dto.dbTools import *
 from dao.dataItems import *
 from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT, VERSION_INFO
@@ -7,6 +8,7 @@ import random
 import string
 from datetime import timedelta
 from SubscribeCore import SubscribeCore
+from logging_module import Logger
 
 
 def login_by_passwd(username: str, passwd: str) -> str:
@@ -129,8 +131,23 @@ def modify_item(new_dict: dict, session: str = "defaultvalue") -> bool:
         return False
 
 
+def threadDecorator(func):
+    def wrapper(*args, **kwargs):
+        thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+        thread.start()
+        return thread
+
+    return wrapper
+
+
+@threadDecorator
 def subscribe_immediately(id: int) -> bool:
     if 0 < id <= getValidID():
-        return SubscribeCore.single_item_subscribe(DownloadItem(id))
+        d = DownloadItem(id)
+        if SubscribeCore.single_item_subscribe(d):
+            return True
+        else:
+            Logger().warning(f"Immediately Subscribe {d.name} failed.")
+            return False
     else:
         return False
