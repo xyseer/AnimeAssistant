@@ -6,6 +6,7 @@ from dto.SqliteDB import DBManipulator
 import random
 import string
 from datetime import timedelta
+from SubscribeCore import SubscribeCore
 
 
 def login_by_passwd(username: str, passwd: str) -> str:
@@ -55,7 +56,7 @@ def get_all_metadata() -> str:
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "metadata_dict_list": metadata_dict_list}
-    return json.dumps(response_dict,ensure_ascii=False)
+    return json.dumps(response_dict, ensure_ascii=False)
 
 
 def get_current_metadata() -> str:
@@ -70,7 +71,7 @@ def get_current_metadata() -> str:
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "metadata_dict_list": metadata_dict_list}
-    return json.dumps(response_dict,ensure_ascii=False)
+    return json.dumps(response_dict, ensure_ascii=False)
 
 
 def get_subscription_item(id: int) -> str:
@@ -78,19 +79,19 @@ def get_subscription_item(id: int) -> str:
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "subscription_item": subscription_item.get_dict()}
-    return json.dumps(response_dict,ensure_ascii=False)
+    return json.dumps(response_dict, ensure_ascii=False)
 
 
 def get_about_info() -> str:  # for about method
-    about_info = f"xy-nas-tool/AnimeAssistant\n" \
-                 f"Version:{VERSION_INFO}\n" \
-                 f"Original Project Repo in Github: xyseer/AnimeAssistant\n" \
-                 f"Original Docker Image Repo in DockerHub: xyseer/AnimeAssistant\n" \
+    about_info = f"xy-nas-tool/AnimeAssistant\r" \
+                 f"Version:{VERSION_INFO}\r" \
+                 f"Original Project Repo in Github: xyseer/AnimeAssistant\r" \
+                 f"Original Docker Image Repo in DockerHub: xyseer/AnimeAssistant\r" \
                  f"Any issue please let me know on Github Project!"
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
                      "about_info": about_info}
-    return json.dumps(response_dict,ensure_ascii=False)
+    return json.dumps(response_dict, ensure_ascii=False)
 
 
 def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, SubscriptionItem]:  # for add method
@@ -124,5 +125,12 @@ def modify_item(new_dict: dict, session: str = "defaultvalue") -> bool:
         DownloadItem(id).from_dict(new_dict).push()
         MetadataItem(id).from_dict(new_dict).push()
         return True
+    else:
+        return False
+
+
+def subscribe_immediately(id: int) -> bool:
+    if 0 < id <= getValidID():
+        return SubscribeCore.single_item_subscribe(DownloadItem(id))
     else:
         return False
