@@ -10,6 +10,7 @@ _T = TypeVar('_T', bound="Parameters")
 
 class Parameters(IEItem):
     def __init__(self):
+        self.DEFAULT_ADDRESS="0.0.0.0:12138"
         self.DB_PATH = CONFIG_DIR + "/XNT.db"
         self.ARIA2_RPC_SERVER = "http://127.0.0.1:6800/jsonrpc"
         self.ARIA2_JSONRPC_TOKEN = ""
@@ -25,6 +26,7 @@ class Parameters(IEItem):
 
     def get_dict(self) -> dict:
         return {
+            'DEFAULT_ADDRESS':self.DEFAULT_ADDRESS,
             'DB_PATH': self.DB_PATH,
             'LOG_DIR': self.LOG_DIR,
             'LOG_LEVEL': self.LOG_LEVEL,
@@ -38,6 +40,7 @@ class Parameters(IEItem):
         }
 
     def from_dict(self, source_dict: dict) -> _T:
+        self.DEFAULT_ADDRESS=source_dict.get('DEFAULT_ADDRESS', self.DEFAULT_ADDRESS)
         self.DB_PATH = source_dict.get('DB_PATH', self.DB_PATH)
         self.LOG_DIR = source_dict.get('LOG_DIR', self.LOG_DIR)
         self.LOG_LEVEL = source_dict.get('LOG_DIR', self.LOG_LEVEL)
