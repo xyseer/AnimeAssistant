@@ -18,7 +18,7 @@ class Parameters(IEItem):
         self.LOG_LEVEL = "ERROR"
         self.JACKETT_API_LINK_LIST = []
         self.ERROR_RETRY_SPAN = 2
-        self.REGULAR_CHECK_SPAN = 6
+        self.REGULAR_CHECK_SPAN = 24
         self.FILTER_DICTS = {"default": {"reject_rules": ["720"], "apply_rules": ["1080"]}}
         self.other = {}
         super().__init__()
