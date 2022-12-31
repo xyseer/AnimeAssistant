@@ -35,7 +35,7 @@ class Parameters(IEItem):
             'ARIA2_RPC_SERVER': self.ARIA2_RPC_SERVER,
             'ARIA2_JSONRPC_TOKEN': self.ARIA2_JSONRPC_TOKEN,
             'JACKETT_API_LINK_LIST': self.JACKETT_API_LINK_LIST,
-            'FILTER_DICTs': self.FILTER_DICTS,
+            'FILTER_DICTS': self.FILTER_DICTS,
             'other': self.other
         }
 
