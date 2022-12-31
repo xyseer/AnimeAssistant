@@ -1,6 +1,12 @@
 from SubscribeCore import SubscribeCore
+from web.frontend import flask_main
+from logging_module import Logger
 
 
 def main():
-    S_C=SubscribeCore()
-    print(S_C.scheduler.state,S_C.scheduler.get_jobs())
+    try:
+        S_C=SubscribeCore()
+        flask_main(S_C)
+    except Exception as e:
+        Logger().error(f"launcher.main occurred an error:{str(e)}")
+        return
