@@ -296,7 +296,6 @@ def add_item():
             f'''<script type="text/javascript">
                                 alert("Error when update:{"No Valid ID was given."}");history.back(-1);</script>'''
     except Exception as e:
-        raise e
         return f'''<script type="text/javascript">
                     alert("Error when update:{str(e)}");history.back(-1);</script>'''
 @app.route("/delete",methods=["GET"])
@@ -516,7 +515,7 @@ def submit():
             if img:
                 try:
                     new_path = "/static/" + ''.join(sample(string.ascii_letters + string.digits, 16)) + ".jpg"
-                    img.save("."+new_path)
+                    img.save(new_path)
                     request_dict["img"]=new_path
                 except Exception:
                     return '''<script type="text/javascript">
