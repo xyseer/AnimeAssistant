@@ -146,10 +146,14 @@ def threadDecorator(func):
 
 
 @threadDecorator
-def subscribe_immediately(id: int) -> bool:
+def subscribe_immediately(id: int,ss:SubscribeCore) -> bool:
     if 0 < id <= getValidID():
         d = DownloadItem(id)
         if SubscribeCore.single_item_subscribe(d):
+            try:
+                ss.remap_scheduler()
+            except Exception:
+                return False
             return True
         else:
             Logger().warning(f"Immediately Subscribe {d.name} failed.")
