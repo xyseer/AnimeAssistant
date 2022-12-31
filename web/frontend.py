@@ -417,9 +417,7 @@ def modify():
     <td width="25%" align="center"><input type="number" width=80% value="{s.span}" class="span" name="span"> <label>小时</label></td>
     <td width="25%" align="center">更新方式</td>
     <td width="25%" align="center">
-      <select class="text1" name="way">
-        <option>way_jackett</option>
-      </select>
+      <input type="number" width=80% value="{s.type}" class="way" name="way">
     </td>
   </tr>
 </table>
