@@ -201,7 +201,7 @@ def detail():
 </table>
 <table width=80% border="1" align="center" cellpadding="1" cellspacing="0" class="main">
   <tr>
-    <td rowspan="2" width=20% align="center"><img src="{m.id}" height="300" width=100%></td>
+    <td rowspan="2" width=20% align="center"><img src="{m.img}" height="300" width=100%></td>
     <td colspan="3" width="80%" height=50 align="center">{m.name}</td>
   </tr>
   <tr>
