@@ -13,7 +13,7 @@ from multiprocessing import Pool
 from GLOBAL_DEFINE import *
 from web.response_funcs import *
 
-app = Flask(__name__, static_folder='static')
+app = Flask(__name__, static_folder='/static')
 ss=None
 
 @app.route("/user", methods=['GET', 'POST'])
@@ -171,7 +171,9 @@ def detail():
     if id<0 or id>=getValidID():
         return "Error: no such id was found."
     s=SubscriptionItem(id)
-    d=DownloadItem(id)
+    ss = DBManipulator()
+    d = ss.get_cursor().execute("SELECT * from downloadTable where id=?", (id,)).fetchone()
+    del ss
     m=MetadataItem(id)
     html = f'''
     <!DOCTYPE html >
@@ -209,19 +211,19 @@ def detail():
 <table width=80% height="300" border="1" align="center" cellpadding="1" cellspacing="0" class="main">
   <tr>
     <td width="25%" align="center">开播时间</td>
-    <td width="25%" align="center">{s.starttime.strftime(HTML_TIME_FORMAT)}</td>
+    <td width="25%" align="center">{s.starttime.strftime(UNIFIED_TIME_FORMAT)}</td>
     <td width="25%" align="center">总集数</td>
     <td width="25%" align="center">{s.totalEpisodes}</td>
   </tr>
   <tr>
     <td width="25%" align="center">上次更新时间</td>
-    <td width="25%" align="center">{s.lastUpdateTime.strftime(HTML_TIME_FORMAT)}</td>
+    <td width="25%" align="center">{s.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT)}</td>
     <td width="25%" align="center">上次更新集数</td>
     <td width="25%" align="center">{s.lastUpdateEP}</td>
   </tr>
   <tr>
     <td width="25%" align="center">下次更新时间</td>
-    <td width="25%" align="center">{s.nextUpdateTime.strftime(HTML_TIME_FORMAT)}</td>
+    <td width="25%" align="center">{s.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT)}</td>
     <td width="25%" align="center">下次更新集数</td>
     <td width="25%" align="center">{s.nextUpdateEP}</td>
   </tr>
@@ -235,16 +237,16 @@ def detail():
   <table width=80% height="200" border="1" align="center" cellpadding="1" cellspacing="0" class="main">
     <tr>
     <td width="50%" align="center">下载来源</td>
-    <td width="50%" align="center">{d.source}</td>
+    <td width="50%" align="center">{d[1]}</td>
   </tr>
     <tr>
     <td width="50%" align="center">下载目录</td>
-    <td width="50%" align="center">{d.directory}</td>
+    <td width="50%" align="center">{d[2]}</td>
   </tr>
     </tr>
     <tr>
     <td width="50%" align="center">过滤条件</td>
-    <td width="50%" align="center">{listTostr(d.filter_name,",")}</td>
+    <td width="50%" align="center">{listTostr(strTolist(d[3]))}</td>
   </tr>
   </table>
 
@@ -294,6 +296,7 @@ def add_item():
             f'''<script type="text/javascript">
                                 alert("Error when update:{"No Valid ID was given."}");history.back(-1);</script>'''
     except Exception as e:
+        raise e
         return f'''<script type="text/javascript">
                     alert("Error when update:{str(e)}");history.back(-1);</script>'''
 @app.route("/delete",methods=["GET"])
@@ -319,12 +322,14 @@ def modify():
         id=int(request.args["id"])
         if 0<id<getValidID():
             s=SubscriptionItem(id)
-            d=DownloadItem(id)
+            ss=DBManipulator()
+            d=ss.get_cursor().execute("SELECT * from downloadTable where id=?",(id,)).fetchone()
+            del ss
             m=MetadataItem(id)
         else:
             return ""
     except Exception as e:
-        return ""
+        return str(e)
 
     html = f'''
         <!DOCTYPE html >
@@ -391,19 +396,19 @@ def modify():
 <table width=80% height="300" border="1" align="center" cellpadding="1" cellspacing="0" class="main">
   <tr>
     <td width="25%" align="center">开播时间</td>
-    <td width="25%" align="center"><input align="center" type="datetime-local" value="{s.starttime.strftime(HTML_TIME_FORMAT)}" class="text1" name="starttime"></td>
+    <td width="25%" align="center"><input align="center" type="datetime-local" value="{s.starttime.strftime(HTML_INPUT_TIME_FORMAT)}" class="text1" name="starttime"></td>
     <td width="25%" align="center">总集数</td>
     <td width="25%" align="center"><input type="number" value="{s.totalEpisodes}" class="text1" name="totaleps"></td>
   </tr>
   <tr>
     <td width="25%" align="center">上次更新时间</td>
-    <td width="25%" align="center"><input align="center" type="datetime-local" value="{s.lastUpdateTime.strftime(HTML_TIME_FORMAT)}" class="text1" name="lasttime"></td>
+    <td width="25%" align="center"><input align="center" type="datetime-local" value="{s.lastUpdateTime.strftime(HTML_INPUT_TIME_FORMAT)}" class="text1" name="lasttime"></td>
     <td width="25%" align="center">上次更新集数</td>
     <td width="25%" align="center"><input type="number" value="{s.lastUpdateEP}" class="text1" name="lastep"></td>
   </tr>
   <tr>
     <td width="25%" align="center">下次更新时间</td>
-    <td width="25%" align="center"><input align="center" type="datetime-local" value="{s.nextUpdateTime.strftime(HTML_TIME_FORMAT)}" class="text1" name="nexttime"></td>
+    <td width="25%" align="center"><input align="center" type="datetime-local" value="{s.nextUpdateTime.strftime(HTML_INPUT_TIME_FORMAT)}" class="text1" name="nexttime"></td>
     <td width="25%" align="center">下次更新集数</td>
     <td width="25%" align="center"><input type="number" value="{s.nextUpdateEP}" class="text1" name="nextep"></td>
   </tr>
@@ -421,20 +426,20 @@ def modify():
   <table width=80% height="200" border="1" align="center" cellpadding="1" cellspacing="0" class="main">
     <tr>
     <td width="50%" align="center">下载来源</td>
-    <td width="50%" align="center"><input type="text" value="{d.source}" class="text1" name="source"></td>
+    <td width="50%" align="center"><input type="text" value="{d[1]}" class="text1" name="source"></td>
   </tr>
     <tr>
     <td width="50%" align="center">下载目录</td>
-    <td width="50%" align="center"><input type="text" value="{d.directory}" class="text1" name="directory"></td>
+    <td width="50%" align="center"><input type="text" value="{d[2]}" class="text1" name="directory"></td>
   </tr>
     </tr>
     <tr>
     <td width="50%" align="center">过滤条件</td>
     <td width="50%" align="center">
       <select class="text1" name="filter">'''
-    html += f"<option>{listTostr(d.filter_name)}</option>"
+    html += f"<option>{listTostr(strTolist(d[3]))}</option>"
     for i in Parameters().FILTER_DICTS.keys():
-        if i not in d.filter_name:
+        if i not in strTolist(d[3]):
             html += f"<option>{i}</option>"
     html += f'''
       </select>
@@ -733,13 +738,17 @@ def setting():
         <td width="50%" align="center">DB_PATH</td>
         <td width="50%" align="center"><input type="text" value="{p.DB_PATH}" class="text1" name="DB_PATH"></td>
       </tr>
+      <tr height="60px">
+        <td width="50%" align="center">ARIA2_RPC_SERVER</td>
+        <td width="50%" align="center"><input type="text" value="{p.ARIA2_RPC_SERVER}" class="text1" name="ARIA2_RPC_SERVER"></td>
+      </tr>
         <tr height="60px">
         <td width="50%" align="center">ARIA2_JSONRPC_TOKEN</td>
         <td width="50%" align="center"><input type="text" value="{p.ARIA2_JSONRPC_TOKEN}" class="text1" name="ARIA2_JSONRPC_TOKEN"></td>
       </tr>
         <tr height="60px">
         <td width="50%" align="center">REGULAR_CHECK_SPAN</td>
-        <td width="50%" align="center"><input type="number" value="{p.REGULAR_CHECK_SPAN}" class="text1" name="DEFAULT_CORE_QUANTITY"></td>
+        <td width="50%" align="center"><input type="number" value="{p.REGULAR_CHECK_SPAN}" class="text1" name="REGULAR_CHECK_SPAN"></td>
       </tr>
         <tr height="60px">
         <td width="50%" align="center">LOG_DIR</td>
@@ -784,7 +793,7 @@ def setting():
                 else{
                 name.setAttribute("value",display_name);
                 var exclude_result=new String(filter_name_list[source.options[source.selectedIndex].value]["reject_rules"])
-                var include_result=new String(filter_name_list[source.options[source.selectedIndex].value]["including_rules"])
+                var include_result=new String(filter_name_list[source.options[source.selectedIndex].value]["apply_rules"])
                 exclude.setAttribute("value",exclude_result.replaceAll(",",";"));
                 include.setAttribute("value",include_result.replaceAll(",",";"));}
     
@@ -881,10 +890,10 @@ def flask_main(S_C:SubscribeCore):
         Logger().error("================MAIN PROCESS UNEXPECTED EXIT=================")
     except KeyboardInterrupt:
         Logger().info("================MAIN PROCESS TERMINATE=================")
-        pass
+        exit(0)
     except InterruptedError:
         Logger().info("================MAIN PROCESS TERMINATE=================")
-        pass
+        exit(0)
     except Exception as e:
         Logger().error(f"mainThread:{str(e)}")
-        exit(-1)
+        pass
