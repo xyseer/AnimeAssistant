@@ -128,6 +128,7 @@ def modify_item(new_dict: dict, session: str = "defaultvalue") -> bool:
         return False
     if check_operation_is_legal(session, 3):
         id = new_dict.get("id", -1)
+        NameItem(id).from_dict(new_dict).push()
         SubscriptionItem(id).from_dict(new_dict).push()
         DownloadItem(id).from_dict(new_dict).push()
         MetadataItem(id).from_dict(new_dict).push()
