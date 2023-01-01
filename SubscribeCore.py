@@ -91,7 +91,7 @@ class SubscribeCore:
     def single_item_subscribe(download_item: DownloadItem) -> bool:
         is_download_success = SubscribeCore.get_type_downloader(download_item).download()
         if is_download_success:
-            download_item.nextUpdateTime = download_item.lastUpdateTime + timedelta(hours=download_item.span)
+            download_item.nextUpdateTime = download_item.nextUpdateTime + timedelta(hours=download_item.span)
             download_item.lastUpdateTime = datetime.now()
             download_item.lastUpdateEP = download_item.nextUpdateEP
             download_item.nextUpdateEP += 1
