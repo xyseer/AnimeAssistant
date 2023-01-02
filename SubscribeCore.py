@@ -12,7 +12,7 @@ from tzlocal import get_localzone
 class SubscribeCore:
     def __init__(self):
         self.download_items = dbTools.getDownloadItems()
-        self.scheduler = BackgroundScheduler(timezone=str(get_localzone()) if get_localzone()!=None else "UTC")
+        self.scheduler = BackgroundScheduler(timezone=str(get_localzone()) if get_localzone() != None else "UTC")
         self.remap_scheduler()
 
     def _fetch_items(self):
@@ -20,16 +20,18 @@ class SubscribeCore:
 
     def remap_scheduler(self):
         self._fetch_items()
-        self.shutdown_scheduler()
+        # self.shutdown_scheduler()
         self.scheduler.remove_all_jobs()
         p = Parameters()
-        self.scheduler.add_job(self.remap_scheduler, "interval", hours=p.REGULAR_CHECK_SPAN,id="remap_scheduler")
+        self.scheduler.add_job(self.remap_scheduler, "interval", hours=p.REGULAR_CHECK_SPAN, id="remap_scheduler")
         for i in self.download_items:
             if i.nextUpdateTime < datetime.now():
-                self.scheduler.add_job(self._check_update_done, args=[i],id=str(i.id))
+                self.scheduler.add_job(self._check_update_done, args=[i], id=str(i.id))
             else:
-                self.scheduler.add_job(self._check_update_done, "date", run_date=i.nextUpdateTime, args=[i],id=str(i.id))
+                self.scheduler.add_job(self._check_update_done, "date", run_date=i.nextUpdateTime, args=[i],
+                                       id=str(i.id))
         self.start_scheduler()
+        Logger().info("Success remapping all subscroptions.")
 
     def _check_update_done(self, download_item: DownloadItem, times: int = 1):
         if times <= 0:
@@ -46,7 +48,7 @@ class SubscribeCore:
                 span_minutes = 1 if int(p.ERROR_RETRY_SPAN * 60 / times) <= 0 else int(p.ERROR_RETRY_SPAN * 60 / times)
                 self.scheduler.add_job(self._check_update_done, "date",
                                        run_date=datetime.now() + timedelta(minutes=span_minutes),
-                                       args=[download_item, times + 1],id=f"{download_item.id}_retry_{times+1}")
+                                       args=[download_item, times + 1], id=f"{download_item.id}_retry_{times + 1}")
                 Logger().warning(
                     f"Subscription {download_item.name} has failed for {times} times. Please check the infos are all correct.")
                 return
@@ -82,7 +84,7 @@ class SubscribeCore:
         class_name = type_name.split(".")[-1]
         try:
             return getattr(getattr(__import__(type_name), class_name, IEDownloadMethod), class_name, IEDownloadMethod)(
-            download_item)
+                download_item)
         except ModuleNotFoundError or AttributeError:
             Logger().error(f"{download_item.type} Not Found. Please check the extensions.")
             return IEDownloadMethod(download_item)
