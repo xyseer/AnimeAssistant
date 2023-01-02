@@ -13,20 +13,20 @@ class SubscriptionItem(IEItem):
     def __init__(self,
                  id: int,
                  name: str = "",
-                 starttime: datetime = datetime.now(),
+                 starttime: datetime = None,
                  totalEpisodes: int = 0,
-                 lastUpdateTime: datetime = datetime.now(),
+                 lastUpdateTime: datetime = None,
                  lastUpdateEP: int = 0,
-                 nextUpdateTime: datetime = datetime.now(),
+                 nextUpdateTime: datetime = None,
                  nextUpdateEP: int = 1,
                  span: int = 168,
-                 type: str = "jackett"):
+                 type: str = "Jackett"):
         super(SubscriptionItem, self).__init__(id, name)
-        self.starttime = starttime
+        self.starttime = starttime if starttime is not None else datetime.now()
         self.totalEpisodes = totalEpisodes
-        self.lastUpdateTime = lastUpdateTime
+        self.lastUpdateTime = lastUpdateTime if lastUpdateTime is not None else datetime.now()
         self.lastUpdateEP = lastUpdateEP
-        self.nextUpdateTime = nextUpdateTime
+        self.nextUpdateTime = nextUpdateTime if nextUpdateTime is not None else datetime.now()
         self.nextUpdateEP = nextUpdateEP
         self.span = span
         self.type = type
