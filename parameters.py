@@ -45,7 +45,7 @@ class Parameters(IEItem):
         self.LOG_DIR = source_dict.get('LOG_DIR', self.LOG_DIR)
         self.LOG_LEVEL = source_dict.get('LOG_DIR', self.LOG_LEVEL)
         self.ERROR_RETRY_SPAN = tryParseInt(source_dict.get('ERROR_RETRY_SPAN', self.ERROR_RETRY_SPAN))
-        self.REGULAR_CHECK_SPAN = tryParseInt(source_dict.get('REGULAR_CHECK__SPAN', self.REGULAR_CHECK_SPAN))
+        self.REGULAR_CHECK_SPAN = tryParseInt(source_dict.get('REGULAR_CHECK_SPAN', self.REGULAR_CHECK_SPAN))
         self.ARIA2_RPC_SERVER = source_dict.get('ARIA2_RPC_SERVER', self.ARIA2_RPC_SERVER)
         self.ARIA2_JSONRPC_TOKEN = source_dict.get('ARIA2_JSONRPC_TOKEN', self.ARIA2_JSONRPC_TOKEN)
         self.JACKETT_API_LINK_LIST = source_dict.get('JACKETT_API_LINK_LIST', self.JACKETT_API_LINK_LIST)
