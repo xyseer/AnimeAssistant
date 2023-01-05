@@ -21,6 +21,7 @@ class Jackett(IEDownloadMethod):
                 Logger().info(
                     f"Jackett check {self.downloaditem.name}[{self.downloaditem.nextUpdateEP}] already in your directory. Updated database and skipped.")
                 return True
+        Logger().info(f"Jackett start lokking for {self.downloaditem.name}")
         try:
             for api_url in p.JACKETT_API_LINK_LIST:
                 api_request_url = api_url + self.downloaditem.source
