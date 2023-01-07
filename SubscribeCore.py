@@ -70,8 +70,7 @@ class SubscribeCore:
         try:
             self.scheduler.start()
         except SchedulerAlreadyRunningError:
-            self.shutdown_scheduler()
-            self.scheduler.start()
+            pass
 
     def __del__(self):
         self.shutdown_scheduler()
