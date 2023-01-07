@@ -861,13 +861,13 @@ def about():
       </tr>
 </table>
 <table width=80% border="1" height="85%" align="center" cellpadding="1" cellspacing="0" class="main">
-  <tr height=300px><td><textarea class="about" readonly="readonly" text-align="center">&#10&#10Thanks for using xy-nas-tool!&#10 xy-nas-tool  made by xy.&#10Github  @xyseer&#10Docker  @xyseer &#10 If you have problem while using this, please let me know on the Github Project.&#10 Enjoy & have fun!</textarea></td></tr>
+  <tr height=300px><td><textarea class="about" readonly="readonly" text-align="center">&#10&#10Thanks for using xy-nas-tool!&#10 xy-nas-tool  made by xy.&#10Github  @xyseer&#10Docker  @xyseer &#10 If you have problem while using this, please let me know on the Github Project.&#10 Enjoy & have fun!{"" if not DEBUG_MODE else ss.scheduler.get_jobs()}</textarea></td></tr>
   <tr height="80%"><td width="80%"><video width="100%" align="center" src="/static/about.mp4" autoplay="autoplay" controls="controls"></video></td></tr>
 
 </table>
     <table width="100%" border="0" cellpadding="0" cellspacing="0" class="nav">
   <tr>
-    <td align=center><h4>xy-nas-tool V{VERSION_INFO}.&nbsp&nbsp&nbsp&nbsp&nbsp made by xyseer.</h4></td>
+    <td align=center><h4>xy-nas-tool V{VERSION_INFO if not DEBUG_MODE else VERSION_INFO+"_Debugging"}.&nbsp&nbsp&nbsp&nbsp&nbsp made by xyseer.</h4></td>
   </tr>
 </table>
   </div>
