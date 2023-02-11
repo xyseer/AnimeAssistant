@@ -1,3 +1,4 @@
+import os.path
 import sqlite3
 from logging_module import Logger
 from parameters import Parameters
@@ -7,6 +8,8 @@ class DBManipulator:
     def __init__(self,dbpath:str=""):
         if not dbpath:
             dbpath=Parameters().DB_PATH
+        if not os.path.exists(dbpath):
+            open(dbpath,"w").close()
         self.con=sqlite3.connect(dbpath)
         self.createNew()
         self.get_cursor().execute("PRAGMA foreign_keys = true;")
