@@ -11,9 +11,12 @@ from dao.DownloadItem import DownloadItem
 
 
 class Aria2(IEDownloadMethod):
-    def __init__(self, downloaditem: DownloadItem, link: str):
+    def __init__(self, downloaditem: DownloadItem, link: str=""):
         super(Aria2, self).__init__(downloaditem)
-        self.link = link
+        if link:
+            self.link=link
+        else:
+            self.link=self.downloaditem.source
 
     def download(self) -> bool:
         result = send_download_info_to_aria2(self.link, self.downloaditem.name, self.downloaditem.directory)
