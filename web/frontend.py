@@ -129,6 +129,8 @@ def animelist():
 <table width=80% height="40px" align="center" cellpadding="1" cellspacing="0">
 <tr><td align="center">
 <a href="add"><button class="button_add">点此以新增剧集</button></a></td>
+<td align="center">
+<a href="once"><button class="button_add">快速下载</button></a></td>
 </tr>
 </table>
 '''
@@ -877,6 +879,105 @@ def about():
 
 '''
 
+
+@app.route("/once/download",methods=["POST"])
+def download_for_once():
+    if request.method == "POST":
+        type=request.form.get("type","Aria2")
+        source=request.form.get("source","")
+        directory=request.form.get("directory","/volume1/Download")
+        filter_name=request.form.get("filter","")
+        if download_once(DownloadItem(-1,"instant",type=type,source=source,directory=directory,filter_name=filter_name)):
+            return '''<script type="text/javascript">
+                        alert("Successfully handled downloads!");document.location.href = '/all';</script>'''
+        else:
+            return '''<script type="text/javascript">
+                                                alert("Failed!");history.back(-1);</script>'''
+    else:
+        return '''<script type="text/javascript">
+                        alert("Illegal access!");document.location.href = '/all';</script>'''
+
+@app.route("/once")
+def once():
+    html= '''<!DOCTYPE html >
+<html >
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>xy-nas-tools</title>
+    <link href="../static/css.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+<div class="box">
+
+    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="nav">
+        <tr>
+            <td><h1>xy-nas-tool</h1></td>
+            <td width="100" align="center"><a href="./">主页</a></td>
+            <td width="100" align="center"><a href="./all">在追番剧</a></td>
+            <td width="100" align="center"><a href="./setting">设置</a></td>
+            <td width="100" align="center"><a href="./log">查看日志</a></td>
+            <td width="100" align="center"><a href="./about">关于</a></td>
+        </tr>
+    </table>
+    <form action="/once/download" method="post" enctype="multipart/form-data">
+        <table width=80% border="1" align="center" cellpadding="1" cellspacing="0" class="main">
+            <tr>
+                <td colspan="3" width="80%" height=50 align="center"><input type="text" value="instant download" class="text1" name="name"></td>
+            </tr>
+        </table>
+        <table width=80% height="200" border="1" align="center" cellpadding="1" cellspacing="0" class="main">
+            <tr>
+                <td width="25%" align="center">更新方式</td>
+                <td width="25%" align="center">
+                    <input type="text" width=80% value="Aria2" class="text1" name="type">
+                </td>
+            </tr>
+            <tr>
+                <td width="50%" align="center">下载来源</td>
+                <td width="50%" align="center"><input type="text" value="" class="text1" name="source"></td>
+            </tr>
+            <tr>
+                <td width="50%" align="center">下载目录</td>
+                <td width="50%" align="center"><input type="text" value="/volume1/Download" class="text1" name="directory"></td>
+            </tr>
+            </tr>
+            <tr>
+                <td width="50%" align="center">过滤条件</td>
+                <td width="50%" align="center">
+                    <select class="text1" name="filter">'''
+    for i in Parameters().FILTER_DICTS.keys():
+        html += f"<option>{i}</option>"
+    html += f'''
+                    </select>
+                </td>
+                <input type="hidden" name="id" value="-1">
+            </tr>
+
+        </table>
+
+        <table width="100%" height="80" border="0" cellpadding="0" cellspacing="0" class="buttons">
+            <tr>
+                <td  align="right">
+                    <button class="button2" onclick="javascript :history.back(-1);" type="button">返回</button>
+                    <button class="button1" type="submit">提交</button>
+                </td>
+            </tr>
+        </table>
+
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="nav">
+            <tr>
+                <td align=center><h4>xy-nas-tool V{VERSION_INFO}.&nbsp&nbsp&nbsp&nbsp&nbsp made by xyseer.</h4></td>
+            </tr>
+        </table>
+    </form>
+</div>
+</body>
+</html>'''
+    return html
 
 
 def flask_main(S_C:SubscribeCore):

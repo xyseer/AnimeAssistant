@@ -161,3 +161,10 @@ def subscribe_immediately(id: int,ss:SubscribeCore) -> bool:
             return False
     else:
         return False
+
+
+def download_once(download_item:DownloadItem)->bool:
+    try:
+        return SubscribeCore.get_type_downloader(download_item).download()
+    except:
+        return False
