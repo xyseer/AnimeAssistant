@@ -1,6 +1,6 @@
 # Update History
 
-### Latest:0.99_beta_01
+### Latest:0.99_beta_09
 
 WARNING: This is still a beta version. Please check the latest stable version unless you want to try and test this new version.
 
@@ -13,6 +13,7 @@ WARNING: This is still a beta version. Please check the latest stable version un
 + Introducing the new logging module: loguru. It provides more convenient and more delicate log management.
 + Fix the issue that the config parameters may not be updated as expected.
 + For users upgrade from earlier versions, the old config files may still available but may not correctly work on this version. For a better experience we recommand you rewrite your config to match the new format.
++ Add instant download function.
 
 ##### While, there are still some functions not available yet:
 
