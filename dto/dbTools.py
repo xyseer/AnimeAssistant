@@ -44,7 +44,7 @@ def getValidID():
 def getSubscriptionItems() -> list:
     from dao.SubscriptionItem import SubscriptionItem
     ss = DBManipulator()
-    item_from_db = ss.get_cursor().execute("SELECT * FROM SubscriptionItem;").fetchall()
+    item_from_db = ss.get_cursor().execute("SELECT * FROM SubscriptionItem ORDER BY nextUpdateTime DESC;").fetchall()
     del ss
     result_items = []
     for i in item_from_db:
@@ -63,7 +63,7 @@ def getSubscriptionItems() -> list:
 def getDownloadItems() -> list:
     from dao.DownloadItem import DownloadItem, IEItem
     ss = DBManipulator()
-    item_from_db = ss.get_cursor().execute("SELECT * FROM DownloadItem;").fetchall()
+    item_from_db = ss.get_cursor().execute("SELECT * FROM DownloadItem ORDER BY nextUpdateTime DESC;").fetchall()
     del ss
     result_items = []
     for i in item_from_db:
@@ -89,7 +89,7 @@ def getDownloadItems() -> list:
 def getMetadataItems() -> list:
     from dao.MetaDataItem import MetadataItem
     ss = DBManipulator()
-    item_from_db = ss.get_cursor().execute("SELECT * FROM metadataItem;").fetchall()
+    item_from_db = ss.get_cursor().execute("SELECT * FROM metadataItem ORDER BY id DESC;").fetchall()
     del ss
     result_items = []
     for i in item_from_db:
