@@ -256,6 +256,8 @@ def detail():
   <tr>
     <td  align="right">
       <button class="button2" onclick="javascript :history.back(-1);">返回</button>
+      <a href="update?id={m.id}"><button class="button1">立即更新</button></a>
+      <a href="modify?id={m.id}"><button class="button3">修改</button></a>
     </td>
   </tr>
 </table>
