@@ -45,7 +45,7 @@ class SubscribeCore:
                 return
         else:
             if times <= 5:
-                span_minutes = 1 if int(p.ERROR_RETRY_SPAN * 60 / times) <= 0 else int(p.ERROR_RETRY_SPAN * 60 / times)
+                span_minutes = 1 if int(p.ERROR_RETRY_SPAN * times * 12) <= 0 else int(p.ERROR_RETRY_SPAN * times * 12)
                 self.scheduler.add_job(self._check_update_done, "date",
                                        run_date=datetime.now() + timedelta(minutes=span_minutes),
                                        args=[download_item, times + 1], id=f"{download_item.id}_retry_{times + 1}")
@@ -53,7 +53,7 @@ class SubscribeCore:
                     f"Subscription {download_item.name} has failed for {times} times. Please check the infos are all correct.")
                 return
             else:
-                span = int(p.ERROR_RETRY_SPAN * 20)
+                span = int(p.ERROR_RETRY_SPAN * 5)
                 Logger().error(
                     f"Subscription {download_item.name} has error fetched for 5 times. This Subscription forced to delay for {span} hours.")
                 download_item.nextUpdateTime = download_item.nextUpdateTime + timedelta(hours=span)
