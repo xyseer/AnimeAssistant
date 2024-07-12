@@ -103,7 +103,7 @@ def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, S
     if check_operation_is_legal(session, 3):
         new_id = getValidID()
         NameItem(new_id, f"new series {new_id}")
-        DownloadItem(new_id, f"new series {new_id}")
+        DownloadItem(new_id, f"new series {new_id}",source='https://nyaa.si/?page=rss&q=[];https://miobt.com/rss-[].xml;https://dmhy.anoneko.com/topics/rss/rss.xml?keyword=[];https://www.tokyotosho.info/rss.php?terms=[]')
         s = SubscriptionItem(new_id, f"new series {new_id}")
         m = MetadataItem(new_id, f"new series {new_id}", info="no information.")
         return [m, s]
