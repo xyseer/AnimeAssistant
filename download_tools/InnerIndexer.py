@@ -7,6 +7,7 @@ from parameters import Parameters
 from download_tools.IEDownloadMethod import IEDownloadMethod
 from logging_module import Logger
 from download_tools.Aria2 import Aria2
+import urllib.parse
 
 headers_pre={"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
              "Sec-Fetch-Dest":"document",
@@ -32,7 +33,7 @@ class InnerIndexer(IEDownloadMethod):
         try:
             for source in self.downloaditem.source.split(";"):
                 # replace series name into blank
-                search_url=re.sub(r"(\[])|%%|(\[name])|(%name%)",self.downloaditem.name,source)
+                search_url=re.sub(r"(\[])|%%|(\[name])|(%name%)",urllib.parse.quote(self.downloaditem.name),source)
                 items=feedparser.parse(search_url).get("entries")
                 for item in items:
                     item_title=re.sub("","",str(item.get("title")))
