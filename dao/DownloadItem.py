@@ -5,6 +5,7 @@ from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT
 from dto.SqliteDB import DBManipulator
 from dto.dbTools import listTostr, strTolist, convert_datetime
 from dao.NameItem import NameItem
+from pathlib import Path
 
 _T = TypeVar('_T', bound="DownloadItem")
 
@@ -18,7 +19,7 @@ class DownloadItem(IEItem):
                  nextUpdateTime: datetime = datetime.now(),
                  nextUpdateEP: int = 0,
                  span: int = 168,
-                 type: str = "jackett",
+                 type: str = "InnerIndexer",
                  source: str = "",
                  directory: str = "",
                  filter_name=None,
@@ -104,6 +105,9 @@ class DownloadItem(IEItem):
                 self.related_item = IEItem(self.id)
         else:
             self.related_item = IEItem(self.id)
+        if not Path(self.directory).exists():
+            Path(self.directory).mkdir(0o777)
+            (Path(self.directory)/'tvshow.nfo').open("w").close()
         return self
 
     def push(self) -> _T:
