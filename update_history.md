@@ -1,10 +1,33 @@
 # Update History
 
-### Latest:0.99_beta_09
+### Latest:0.999
 
 WARNING: This is still a beta version. Please check the latest stable version unless you want to try and test this new version.
 
 ##### New Features:
+
++ Now both 'home' and 'all' lists are descending by id, which means the more recent series will show on the top.
++ Fallback the retry method to normal increasing method. the ERROR_RETRY_SPAN means the maximum span for the last try.
++ Add 'modify' & 'update' button in the detail page.
++ Now the download parts will check the existence of target folder. If it's not it will automatically be created. However you must bind the target directory to the container.
++ fix InnerIndexer failed in using item name to search results due to not parsing to url format string.
++ Modify some default value for convenience of creating new series.
+
+
+
+##### While, there are still some functions not available yet:
+
++ User management.
++ No elegant user interface.
+
+Due to my lack of building beautiful front-end pages and some personal issues, this project won't get a frequent update as long as the basic functions working well. The version won't pass 1.0 either though it's kind of perfectly working for me.
+Thanks for all your supporting! Hope there will be a chance to make a big update in the future.
+
+
+
+----------
+
+### 0.99:
 
 + Rebuild all back-end parts. The new version is more powerful and stable.
 + Interface for data items and download methods. It can support any extensions developed under the new interface standard. Simply store the new $module.class$ name of extension's item/method into the downloadTable.related_table/subscriptionTable.type so that the brand new SubscribeCore will automatically find the related class and apply it.
@@ -14,17 +37,6 @@ WARNING: This is still a beta version. Please check the latest stable version un
 + Fix the issue that the config parameters may not be updated as expected.
 + For users upgrade from earlier versions, the old config files may still available but may not correctly work on this version. For a better experience we recommand you rewrite your config to match the new format.
 + Add instant download function.
-
-##### While, there are still some functions not available yet:
-
-+ User management.
-+ No elegant user interface.
-
-The next formal version may focus on dealing with these two issues.
-
-
-
-----------
 
 ### 0.94
 

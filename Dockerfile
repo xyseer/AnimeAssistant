@@ -1,7 +1,7 @@
-FROM python:3.9
+FROM python:3.9-slim
 
 LABEL image_name="xyseer/AnimeAssistant"
-LABEL version=0.99
+LABEL version=0.999
 LABEL description="xy-nas-tool/AnimeAssistant is a tool for anime series auto-subscription."
 
 WORKDIR /app
@@ -18,7 +18,8 @@ COPY ./static /static
 
 EXPOSE 12138
 
-
+# remove vulnerablilities
+RUN pip3 uninstall -y setuptools pip
 
 
 ENV TZ=Asia/Taipei

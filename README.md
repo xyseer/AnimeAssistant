@@ -20,23 +20,25 @@ The AnimeAssistant application is very easy to use. Just run the main.py or star
 
 
 
-### Latest:0.99_beta_01
+### Latest:0.999
 
 WARNING: This is still a beta version. Please check the latest stable version unless you want to try and test this new version.
 
 ##### New Features:
 
-+ Rebuild all back-end parts. The new version is more powerful and stable.
-+ Interface for data items and download methods. It can support any extensions developed under the new interface standard. Simply store the new $module.class$ name of extension's item/method into the downloadTable.related_table/subscriptionTable.type so that the brand new SubscribeCore will automatically find the related class and apply it.
-+ Database has been redesigned for a better performance.The old database will not work on this version. For users upgraded from earlier versions, please move your data to the new database.
-+ The integrated download method Jackett will check the local file existence before applying the matched results.
-+ Introducing the new logging module: loguru. It provides more convenient and more delicate log management.
-+ Fix the issue that the config parameters may not be updated as expected.
-+ For users upgrade from earlier versions, the old config files may still available but may not correctly work on this version. For a better experience we recommand you rewrite your config to match the new format.
++ Now both 'home' and 'all' lists are descending by id, which means the more recent series will show on the top.
++ Fallback the retry method to normal increasing method. the ERROR_RETRY_SPAN means the maximum span for the last try.
++ Add 'modify' & 'update' button in the detail page.
++ Now the download parts will check the existence of target folder. If it's not it will automatically be created. However you must bind the target directory to the container.
++ fix InnerIndexer failed in using item name to search results due to not parsing to url format string.
++ Modify some default value for convenience of creating new series.
+
+
 
 ##### While, there are still some functions not available yet:
 
 + User management.
 + No elegant user interface.
 
-The next formal version may focus on dealing with these two issues.
+Due to my lack of building beautiful front-end pages and some personal issues, this project won't get a frequent update as long as the basic functions working well. The version won't pass 1.0 either though it's kind of perfectly working for me.
+Thanks for all your supporting! Hope there will be a chance to make a big update in the future.
