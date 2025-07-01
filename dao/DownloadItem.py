@@ -106,7 +106,7 @@ class DownloadItem(IEItem):
         else:
             self.related_item = IEItem(self.id)
         if not Path(self.directory).exists():
-            Path(self.directory).mkdir(0o777)
+            Path(self.directory).mkdir(0o777,parents=True)
             (Path(self.directory)/'tvshow.nfo').open("w").close()
         return self
 
