@@ -561,7 +561,7 @@ def submit():
                                                 alert("修改失败: Process LastEP Error!");history.back(-1);</script>'''
             if nextep:
                 try:
-                    if int(nextep) > 0:
+                    if int(nextep) >= 0:
                         request_dict["nextUpdateEP"]=int(nextep)
                 except Exception:
                     return '''<script type="text/javascript">
