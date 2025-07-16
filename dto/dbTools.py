@@ -86,6 +86,28 @@ def getDownloadItems() -> list:
     return result_items
 
 
+def getDownloadItemById(id: int):
+    from dao.DownloadItem import DownloadItem, IEItem
+    ss = DBManipulator()
+    item_from_db = ss.get_cursor().execute("SELECT * FROM DownloadItem WHERE id =?", (id,)).fetchone()
+    del ss
+    s = DownloadItem(-1)
+    if item_from_db is not None:
+        s.id, s.name, lastUpdateTime, s.lastUpdateEP, nextUpdateTime, s.nextUpdateEP, s.span, s.type, s.source, s.directory, filter_name, related_item = item_from_db
+        s.lastUpdateTime, s.nextUpdateTime = convert_datetime(lastUpdateTime), convert_datetime(nextUpdateTime)
+        filter_name_dirty = strTolist(filter_name)
+        s.filter_name = filter_name_dirty if len(filter_name_dirty) > 0 else ["default"]
+        if related_item:
+            try:
+                s.related_item = getattr(getattr(__import__(related_item), related_item.split(".")[-1], IEItem),
+                                         related_item.split(".")[-1], IEItem)(s.id)
+            except ModuleNotFoundError or AttributeError:
+                s.related_item = IEItem(s.id)
+        else:
+            s.related_item = IEItem(s.id)
+    return s
+
+
 def getMetadataItems() -> list:
     from dao.MetaDataItem import MetadataItem
     ss = DBManipulator()

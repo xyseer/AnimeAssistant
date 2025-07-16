@@ -598,7 +598,7 @@ def submit():
                     return '''<script type="text/javascript">
                                                 alert("修改失败: Process Filter Error!");history.back(-1);</script>'''
             try:
-                modify_item(request_dict)
+                modify_item(request_dict,ss)
             except Exception:
                 return '''<script type="text/javascript">
                                                                 alert("修改失败: Process Filter Error!");history.back(-1);</script>'''
@@ -749,7 +749,7 @@ def setting():
       </tr>
         <tr height="60px">
         <td width="50%" align="center">REGULAR_CHECK_SPAN</td>
-        <td width="50%" align="center"><input type="number" value="{p.REGULAR_CHECK_SPAN}" class="text1" name="REGULAR_CHECK_SPAN"></td>
+        <td width="50%" align="center"><input type="number" value="{p.REGULAR_CHECK_SPAN}" class="text1" name="REGULAR_CHECK_SPAN">days</td>
       </tr>
         <tr height="60px">
         <td width="50%" align="center">LOG_DIR</td>
@@ -762,7 +762,7 @@ def setting():
     html+=f'''</textarea></td></tr>
         <tr height="60px">
         <td width="50%" align="center">ERROR_RETRY_SPAN</td>
-        <td width="50%" align="center"><input type="number" value="{p.ERROR_RETRY_SPAN}" class="text1" name="ERROR_RETRY_SPAN">h</td>
+        <td width="50%" align="center"><input type="number" value="{p.ERROR_RETRY_SPAN}" class="text1" name="ERROR_RETRY_SPAN">hrs</td>
       </tr>
       </table>
          <table width=80%  border="1" align="center" cellpadding="1" cellspacing="0" class="main">

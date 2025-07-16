@@ -123,7 +123,7 @@ def delete_item(item_id: int, session: str = "defaultvalue") -> bool:
         return False
 
 
-def modify_item(new_dict: dict, session: str = "defaultvalue") -> bool:
+def modify_item(new_dict: dict, ss:SubscribeCore, session: str = "defaultvalue") -> bool:
     if new_dict.get("id", -1) < 0:
         return False
     if check_operation_is_legal(session, 3):
@@ -132,6 +132,7 @@ def modify_item(new_dict: dict, session: str = "defaultvalue") -> bool:
         SubscriptionItem(id).from_dict(new_dict).push()
         DownloadItem(id).from_dict(new_dict).push()
         MetadataItem(id).from_dict(new_dict).push()
+        ss.update_download(DownloadItem(id))
         return True
     else:
         return False

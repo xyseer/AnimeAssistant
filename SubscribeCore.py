@@ -3,10 +3,11 @@ from dao.dataItems import *
 from download_tools.IEDownloadMethod import IEDownloadMethod
 from datetime import datetime, timedelta
 from parameters import Parameters
-from logging_module import Logger
+from logging_module import Logger, delete_logs_on_schedule
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.schedulers import SchedulerNotRunningError, SchedulerAlreadyRunningError
 from tzlocal import get_localzone
+from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT, VERSION_INFO
 
 
 class SubscribeCore:
@@ -23,7 +24,7 @@ class SubscribeCore:
         # self.shutdown_scheduler()
         self.scheduler.remove_all_jobs()
         p = Parameters()
-        self.scheduler.add_job(self.remap_scheduler, "interval", hours=p.REGULAR_CHECK_SPAN, id="remap_scheduler")
+        self.scheduler.add_job(self.remap_scheduler, "interval", days=p.REGULAR_CHECK_SPAN, id="remap_scheduler")
         for i in self.download_items:
             if i.nextUpdateTime < datetime.now():
                 self.scheduler.add_job(self._check_update_done, args=[i], id=str(i.id))
@@ -31,18 +32,30 @@ class SubscribeCore:
                 self.scheduler.add_job(self._check_update_done, "date", run_date=i.nextUpdateTime, args=[i],
                                        id=str(i.id))
         self.start_scheduler()
+        delete_logs_on_schedule()
         Logger().info("Success remapping all subscroptions.")
+
+    def update_download(self, download_item: DownloadItem):
+        download_item = dbTools.getDownloadItemById(download_item.id)
+        if download_item.id > 0:
+            if download_item.nextUpdateTime < datetime.now():
+                self.scheduler.add_job(self._check_update_done, args=[download_item],
+                                       id=f"{download_item.id}_{download_item.nextUpdateEP}", replace_existing=True)
+            else:
+                self.scheduler.add_job(self._check_update_done, "date", run_date=download_item.nextUpdateTime,
+                                       args=[download_item],
+                                       id=f"{download_item.id}_{download_item.nextUpdateEP}",
+                                       replace_existing=True)
+            Logger().info(f"Successfully Scheduled next update: {download_item.name}[{download_item.nextUpdateEP}] on {download_item.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT)}.")
+        self.start_scheduler()
+        return
 
     def _check_update_done(self, download_item: DownloadItem, times: int = 1):
         if times <= 0:
             return
         p = Parameters()
         if self.single_item_subscribe(download_item):
-            if p.REGULAR_CHECK_SPAN > download_item.span:
-                self.remap_scheduler()
-                return
-            else:
-                return
+            self.update_download(download_item)
         else:
             if times <= 5:
                 span_minutes = 1 if int(p.ERROR_RETRY_SPAN * times * 12) <= 0 else int(p.ERROR_RETRY_SPAN * times * 12)
@@ -58,6 +71,7 @@ class SubscribeCore:
                     f"Subscription {download_item.name} has error fetched for 5 times. This Subscription forced to delay for {span} hours.")
                 download_item.nextUpdateTime = download_item.nextUpdateTime + timedelta(hours=span)
                 download_item.push()
+                self.update_download(download_item)
                 return
 
     def shutdown_scheduler(self):
