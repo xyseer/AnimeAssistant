@@ -19,3 +19,21 @@ urllib3>=1.26.13
 Werkzeug>=2.2.2
 zipp>=3.11.0
 feedparser>=6.0.10
+
+# Env for extension function (optional if using only core)
+
+# Ytb download series
+# pytube>=15.0.0
+
+# HmacgImport excel framework
+# openpyxl>=3.1.5
+# numpy>=2.3.1
+# openpyxl-image-loader>=1.0.5
+# pillow>=11.3.0
+# pyzbar>=0.1.9
+# sgmllib3k>=1.0.0
+
+
+
+
+

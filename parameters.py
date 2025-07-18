@@ -57,7 +57,6 @@ class Parameters(IEItem):
         if not os.path.exists(CONFIG_DIR):
             os.mkdir(CONFIG_DIR)
         if not os.path.exists(file_path):
-            print(file_path)
             open(file_path, "w").close()
         with open(file_path, "r", encoding="utf8") as fp:
             try:

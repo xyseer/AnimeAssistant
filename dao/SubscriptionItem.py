@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import TypeVar
 from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT
 from dto.SqliteDB import DBManipulator
-from dto.dbTools import convert_datetime
+from dto.dbTools import convert_datetime,adapt_datetime
 from dao.NameItem import NameItem
 
 _T = TypeVar('_T', bound="SubscriptionItem")
@@ -20,7 +20,7 @@ class SubscriptionItem(IEItem):
                  nextUpdateTime: datetime = None,
                  nextUpdateEP: int = 1,
                  span: int = 168,
-                 type: str = "Jackett"):
+                 type: str = "InnerIndexer"):
         super(SubscriptionItem, self).__init__(id, name)
         self.starttime = starttime if starttime is not None else datetime.now()
         self.totalEpisodes = totalEpisodes
@@ -42,7 +42,7 @@ class SubscriptionItem(IEItem):
                 "totalEpisodes": self.totalEpisodes,
                 "lastUpdateTime": self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT),
                 "lastUpdateEP": self.lastUpdateEP,
-                "nextUpdateTime": self.nextUpdateTime,
+                "nextUpdateTime": self.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT),
                 "nextUpdateEP": self.nextUpdateEP,
                 "span": self.span,
                 "type": self.type}
@@ -51,10 +51,16 @@ class SubscriptionItem(IEItem):
         self.id = source_dict.get("id", self.id)
         self.name = source_dict.get("name", self.name)
         self.starttime = source_dict.get("starttime", self.starttime)
+        if type(self.starttime)==str:
+            self.starttime=convert_datetime(self.starttime)
         self.totalEpisodes = source_dict.get("totalEpisodes", self.totalEpisodes)
         self.lastUpdateTime = source_dict.get("lastUpdateTime", self.lastUpdateTime)
+        if type(self.lastUpdateTime)==str:
+            self.lastUpdateTime=convert_datetime(self.lastUpdateTime)
         self.lastUpdateEP = source_dict.get("lastUpdateEP", self.lastUpdateEP)
         self.nextUpdateTime = source_dict.get("nextUpdateTime", self.nextUpdateTime)
+        if type(self.nextUpdateTime)==str:
+            self.nextUpdateTime=convert_datetime(self.nextUpdateTime)
         self.nextUpdateEP = source_dict.get("nextUpdateEP", self.nextUpdateEP)
         self.span = source_dict.get("span", self.span)
         self.type = source_dict.get("type", self.type)

@@ -1,8 +1,16 @@
+import base64
 import json
 import threading
+from pathlib import Path
+from typing import Tuple
+
+from dao.DownloadItem import _T
+from dao.IEItem import _T
+from dao.MetaDataItem import _T
+from dao.SubscriptionItem import _T
 from dto.dbTools import *
 from dao.dataItems import *
-from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT, VERSION_INFO
+from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT, VERSION_INFO, STATIC_DIR
 from dto.SqliteDB import DBManipulator
 import random
 import string
@@ -79,7 +87,7 @@ def get_current_metadata() -> str:
 def get_subscription_item(id: int) -> str:
     if not (0 < id < getValidID()):
         return json.dumps({"status": 404, "auth": f"xy-nas-tools {VERSION_INFO}",
-                     "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC"})
+                           "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC"})
     subscription_item = SubscriptionItem(id)
     response_dict = {"status": 200, "auth": f"xy-nas-tools {VERSION_INFO}",
                      "time": datetime.utcnow().strftime(UNIFIED_TIME_FORMAT) + " UTC",
@@ -103,7 +111,8 @@ def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, S
     if check_operation_is_legal(session, 3):
         new_id = getValidID()
         NameItem(new_id, f"new series {new_id}")
-        DownloadItem(new_id, f"new series {new_id}",source='https://nyaa.si/?page=rss&q=[];https://miobt.com/rss-[].xml;https://dmhy.anoneko.com/topics/rss/rss.xml?keyword=[];https://www.tokyotosho.info/rss.php?terms=[]')
+        DownloadItem(new_id, f"new series {new_id}",
+                     source='https://nyaa.si/?page=rss&q=[];https://miobt.com/rss-[].xml;https://dmhy.anoneko.com/topics/rss/rss.xml?keyword=[];https://www.tokyotosho.info/rss.php?terms=[]')
         s = SubscriptionItem(new_id, f"new series {new_id}")
         m = MetadataItem(new_id, f"new series {new_id}", info="no information.")
         return [m, s]
@@ -123,7 +132,7 @@ def delete_item(item_id: int, session: str = "defaultvalue") -> bool:
         return False
 
 
-def modify_item(new_dict: dict, ss:SubscribeCore, session: str = "defaultvalue") -> bool:
+def modify_item(new_dict: dict, ss: SubscribeCore, session: str = "defaultvalue") -> bool:
     if new_dict.get("id", -1) < 0:
         return False
     if check_operation_is_legal(session, 3):
@@ -148,7 +157,7 @@ def threadDecorator(func):
 
 
 @threadDecorator
-def subscribe_immediately(id: int,ss:SubscribeCore) -> bool:
+def subscribe_immediately(id: int, ss: SubscribeCore) -> bool:
     if 0 < id <= getValidID():
         d = DownloadItem(id)
         if SubscribeCore.single_item_subscribe(d):
@@ -164,8 +173,43 @@ def subscribe_immediately(id: int,ss:SubscribeCore) -> bool:
         return False
 
 
-def download_once(download_item:DownloadItem)->bool:
+def download_once(download_item: DownloadItem) -> bool:
     try:
         return SubscribeCore.get_type_downloader(download_item).download()
     except:
         return False
+
+
+def file_to_base64(path: str) -> str:
+    with open(path, 'rb') as f:
+        encoded = base64.b64encode(f.read())
+    return encoded.decode('utf-8')
+
+
+def base64_to_file(b64_string: str, output_path: str):
+    with open(output_path, 'wb') as f:
+        f.write(base64.b64decode(b64_string))
+
+
+def import_items(import_list:list, session: str = "defaultvalue") -> list:
+    if check_operation_is_legal(session, 3):
+        import_items=[]
+        for new_dict in import_list:
+            new_dict["id"]=-1
+            id = -1
+            if not new_dict.get("source",""):
+                new_dict["source"]='https://nyaa.si/?page=rss&q=[];https://miobt.com/rss-[].xml;https://dmhy.anoneko.com/topics/rss/rss.xml?keyword=[];https://www.tokyotosho.info/rss.php?terms=[]'
+            if not new_dict.get("directory",""):
+                new_dict['directory']=safe_filename(new_dict.get('name',''))
+            if new_dict.get("img_base64",""):
+                img = str(Path(STATIC_DIR) / (''.join(sample(string.ascii_letters + string.digits, 16)) + ".jpg"))
+                base64_to_file(new_dict.get("img_base64"),img)
+                new_dict['img']=img
+            n = NameItem(id).from_dict(new_dict)
+            s = SubscriptionItem(id).from_dict(new_dict)
+            d = DownloadItem(id).from_dict(new_dict)
+            m = MetadataItem(id).from_dict(new_dict)
+            import_items.append((n, s, d, m))
+        return import_items
+    else:
+        return []

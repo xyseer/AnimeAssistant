@@ -47,6 +47,9 @@ class SubscribeCore:
                                        id=f"{download_item.id}_{download_item.nextUpdateEP}",
                                        replace_existing=True)
             Logger().info(f"Successfully Scheduled next update: {download_item.name}[{download_item.nextUpdateEP}] on {download_item.nextUpdateTime.strftime(UNIFIED_TIME_FORMAT)}.")
+        else:
+            Logger().info(
+                f"{download_item.name}[{download_item.lastUpdateEP}] is probably the last episode. Skipped this series.")
         self.start_scheduler()
         return
 
@@ -54,6 +57,8 @@ class SubscribeCore:
         if times <= 0:
             return
         p = Parameters()
+        if download_item.id<0:
+            return
         if self.single_item_subscribe(download_item):
             self.update_download(download_item)
         else:

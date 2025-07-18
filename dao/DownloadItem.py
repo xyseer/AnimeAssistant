@@ -26,7 +26,7 @@ class DownloadItem(IEItem):
                  related_item: IEItem = None):
         super(DownloadItem, self).__init__(id, name)
         if filter_name is None:
-            filter_name = ["dafault"]
+            filter_name = ["default"]
         if related_item is None:
             related_item = IEItem()
         self.lastUpdateTime = lastUpdateTime
@@ -62,8 +62,12 @@ class DownloadItem(IEItem):
         self.id = source_dict.get("id", self.id)
         self.name = source_dict.get("name", self.name)
         self.lastUpdateTime = source_dict.get("lastUpdateTime", self.lastUpdateTime)
+        if type(self.lastUpdateTime)==str:
+            self.lastUpdateTime=convert_datetime(self.lastUpdateTime)
         self.lastUpdateEP = source_dict.get("lastUpdateEP", self.lastUpdateEP)
         self.nextUpdateTime = source_dict.get("nextUpdateTime", self.nextUpdateTime)
+        if type(self.nextUpdateTime)==str:
+            self.nextUpdateTime=convert_datetime(self.nextUpdateTime)
         self.nextUpdateEP = source_dict.get("nextUpdateEP", self.nextUpdateEP)
         self.span = source_dict.get("span", self.span)
         self.type = source_dict.get("type", self.type)
@@ -86,10 +90,15 @@ class DownloadItem(IEItem):
             return self
         ss = DBManipulator()
         item_from_db = ss.get_cursor().execute("SELECT * FROM DownloadItem WHERE id=?;", (self.id,)).fetchone()
-        del ss
         if not item_from_db:
+            if ss.get_cursor().execute("SELECT * FROM downloadTable WHERE id=?", (self.id,)).fetchone():
+                self.id=-1
+                del ss
+                return self
+            del ss
             self.push()
             return self
+        del ss
         if not item_from_db[2]:
             self.push()
             return self
@@ -116,7 +125,7 @@ class DownloadItem(IEItem):
             return self
         NameItem(self.id,self.name).push()
         ss = DBManipulator()
-        if not ss.get_cursor().execute("SELECT * FROM DownloadItem WHERE id=?", (self.id,)).fetchone():
+        if not ss.get_cursor().execute("SELECT * FROM downloadTable WHERE id=?", (self.id,)).fetchone():
             ss.get_cursor().execute("INSERT INTO subscriptionTable VALUES(?,?,?,?,?,?,?,?,?);", (
                 self.id, datetime.now().strftime(UNIFIED_TIME_FORMAT), self.nextUpdateEP,
                 self.lastUpdateTime.strftime(UNIFIED_TIME_FORMAT), self.lastUpdateEP,

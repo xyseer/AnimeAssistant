@@ -1,3 +1,7 @@
+import re
+import string
+from random import sample
+
 from GLOBAL_DEFINE import UNIFIED_TIME_FORMAT
 from datetime import datetime
 from typing import overload
@@ -15,6 +19,21 @@ def convert_datetime(val: bytes):
 
 def convert_datetime(val: str):
     return datetime.strptime(val, UNIFIED_TIME_FORMAT)
+
+
+def safe_filename(name: str, replacement: str = "_", max_length: int = 255) -> str:
+    # Define invalid characters across platforms (especially Windows)
+    invalid_chars = r'<>:"/\\|?*\0!'
+    # Remove control characters
+    name = re.sub(r'[\x00-\x1f\x7f]', replacement, name)
+    # Replace invalid characters with replacement
+    name = re.sub(f"[{re.escape(invalid_chars)}]", replacement, name)
+    name = re.sub(r"\s+", replacement, name)
+    # Remove repeated replacements
+    name = re.sub(f"{re.escape(replacement)}+", replacement, name)
+    # Trim and truncate
+    name = name.strip().strip('. ')
+    return name[:max_length] or ''.join(sample(string.ascii_letters + string.digits, 16))
 
 
 def listTostr(l: list, sep: str = ";"):

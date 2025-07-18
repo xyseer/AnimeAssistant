@@ -1,18 +1,30 @@
 # Update History
 
-### Latest:0.999
+### Latest:0.9b
 
 WARNING: This is still a beta version. Please check the latest stable version unless you want to try and test this new version.
 
 ##### New Features:
 
-+ Now both 'home' and 'all' lists are descending by id, which means the more recent series will show on the top.
-+ Fallback the retry method to normal increasing method. the ERROR_RETRY_SPAN means the maximum span for the last try.
-+ Add 'modify' & 'update' button in the detail page.
-+ Now the download parts will check the existence of target folder. If it's not it will automatically be created. However you must bind the target directory to the container.
-+ fix InnerIndexer failed in using item name to search results due to not parsing to url format string.
-+ Modify some default value for convenience of creating new series.
++ Add EXPERIMENTAL flag for a not so that stable functions. Users who prefer an advanced features can toggle this flag by access `/experimental` and it shows the status of your current EXPERIMENTAL flag.
 
++ Add new function: Export your subscription as json. (With cover photo as base64 inside)
+
++ EXPERIMENTAL feature: Add import method. This allows user import from json text shared from others. 
+
+  > [!NOTE]
+  >
+  > EXPERIMENTAL flag is required.
+
++ EXPERIMENTAL feature: Add HmacgImport method. Now it can read and convert xlsx file from HMacg. Currently it relies on lots of magic number to work. So take the risk if you use this feature. 
+
+  > [!NOTE]
+  >
+  > EXPERIMENTAL flag is requied.
+  >
+  > Install requiements for xlsx processing is required (See requirements.txt)
+
+- Fix some conflicts when updating a outdated DownloadItem.
 
 
 ##### While, there are still some functions not available yet:
@@ -23,7 +35,31 @@ WARNING: This is still a beta version. Please check the latest stable version un
 Due to my lack of building beautiful front-end pages and some personal issues, this project won't get a frequent update as long as the basic functions working well. The version won't pass 1.0 either though it's kind of perfectly working for me.
 Thanks for all your supporting! Hope there will be a chance to make a big update in the future.
 
+### 0.9a
 
+- Migrate to a new subscription handler method. As apscheduler is reliable, the new method won't need to check everything in a regular span, which reduced the cost and improved performance.
+- Fixed log retention issue. The reason why loguru retention is not working remains unknown. However, there is a new log retention method implementation, which will run with `remap_scheduler` and leave REGULAR_CHECK_SPAN amount of logs.
+- Provide arm64 build for docker images.
+
+With these changes, we strongly recommend you change the REGULAR_CHECK_SPAN into a integer greater than 7 (days) for a better experience.
+
+-------
+
+### 0.99e
+
+- Emerge fix: Fixed incorrect permission when creating new series, which previously leaded to failure when creating or editing new series. (Thanks for pathlib for not pointing out the issue in their document and thanks for the implentation used by path lib, os, pointing out this feature in their documents clearly.)
+- Fixed not creating directories recursively when creating new series.
+
+----------------------
+
+### 0.999
+
++ Now both 'home' and 'all' lists are descending by id, which means the more recent series will show on the top.
++ Fallback the retry method to normal increasing method. the ERROR_RETRY_SPAN means the maximum span for the last try.
++ Add 'modify' & 'update' button in the detail page.
++ Now the download parts will check the existence of target folder. If it's not it will automatically be created. However you must bind the target directory to the container.
++ fix InnerIndexer failed in using item name to search results due to not parsing to url format string.
++ Modify some default value for convenience of creating new series.
 
 ----------
 
