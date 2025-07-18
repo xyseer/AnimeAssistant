@@ -1,0 +1,12 @@
+# .dockerignore
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.*  # ignore all hidden files (optional, use carefully)
+*.pem
+*.key
+*.crt
+*.env
+.env.*

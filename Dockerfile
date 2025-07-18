@@ -1,4 +1,4 @@
-FROM python:3.13-alpine
+FROM python:3.13-slim
 
 LABEL image_name="xyseer/AnimeAssistant"
 LABEL version=0.9b
