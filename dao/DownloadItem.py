@@ -83,6 +83,13 @@ class DownloadItem(IEItem):
                 self.related_item = IEItem(self.id)
         else:
             self.related_item = IEItem(self.id)
+        try:
+            if not Path(self.directory).exists():
+                Path(self.directory).mkdir(0o777,parents=True)
+                Path(self.directory).chmod(0o777)
+                (Path(self.directory)/'tvshow.nfo').open("w").close()
+        except:
+            return self
         return self
 
     def fetch(self) -> _T:
