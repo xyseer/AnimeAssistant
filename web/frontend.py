@@ -150,6 +150,8 @@ def animelist():
 <td align="center">
 <a href="import"><button class="button_add" {"hidden" if not EXPERIMENTAL else ""}>导入信息</button></a></td>
 <td align="center">
+<a href="remap"><button class="button_add">刷新全部订阅</button></a></td>
+<td align="center">
 <a href="once"><button class="button_add">快速下载</button></a></td>
 </tr>
 </table>
@@ -331,6 +333,7 @@ def del_item():
         if int(request.args.get("id", "-1")) > 0:
             table_id = int(request.args.get("id", "0"))
             if delete_item(table_id):
+                ss.remap_scheduler()
                 return redirect(f"all")
             else:
                 return f'''<script type="text/javascript">
@@ -1487,6 +1490,12 @@ def import_details(im_d: list):
     </html>
         '''
     return html
+
+@app.route("/remap")
+def remap():
+    ss.remap_scheduler()
+    return f'''<script type="text/javascript">
+                alert("已刷新全部订阅！");history.back(-1);</script>'''
 
 
 def flask_main(S_C: SubscribeCore):

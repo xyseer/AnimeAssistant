@@ -18,33 +18,16 @@ DB files will automatically be created by the application for the first time. Us
 
 The AnimeAssistant application is very easy to use. Just run the main.py or start your Docker container and then the seivice will start. You can edit the subscroptions and settings with a simple web interface (default port is 12138).
 
-
-
-### Latest:0.9b
+### Latest:0.9c
 
 WARNING: This is still a beta version. Please check the latest stable version unless you want to try and test this new version.
 
-##### New Features:
+##### What's new:
 
-+ Add EXPERIMENTAL flag for a not so that stable functions. Users who prefer an advanced features can toggle this flag by access `/experimental` and it shows the status of your current EXPERIMENTAL flag.
++ Fix the delay deletion problem in the new subscription handler method.
++ Move default source links to DEFAULT_SOURCE in settings.
 
-+ Add new function: Export your subscription as json. (With cover photo as base64 inside)
 
-+ EXPERIMENTAL feature: Add import method. This allows user import from json text shared from others. 
-
-  > [!NOTE]
-  >
-  > EXPERIMENTAL flag is required.
-
-+ EXPERIMENTAL feature: Add HmacgImport method. Now it can read and convert xlsx file from HMacg. Currently it relies on lots of magic number to work. So take the risk if you use this feature. 
-
-  > [!NOTE]
-  >
-  > EXPERIMENTAL flag is requied.
-  >
-  > Install requiements for xlsx processing is required (See requirements.txt)
-
-- Fix some conflicts when updating a outdated DownloadItem.
 
 ##### While, there are still some functions not available yet:
 

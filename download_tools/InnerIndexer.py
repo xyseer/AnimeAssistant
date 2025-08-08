@@ -31,7 +31,10 @@ class InnerIndexer(IEDownloadMethod):
                 return True
         Logger().info(f"InnerIndexer checking {self.downloaditem.name}")
         try:
-            for source in self.downloaditem.source.split(";"):
+            ori_source=self.downloaditem.source
+            if not ori_source:
+                ori_source=p.DEFAULT_SOURCE
+            for source in ori_source.split(";"):
                 # replace series name into blank
                 search_url=re.sub(r"(\[])|%%|(\[name])|(%name%)",urllib.parse.quote(self.downloaditem.name),source)
                 items=feedparser.parse(search_url).get("entries")

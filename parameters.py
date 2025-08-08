@@ -20,6 +20,7 @@ class Parameters(IEItem):
         self.ERROR_RETRY_SPAN = 2
         self.REGULAR_CHECK_SPAN = 24
         self.FILTER_DICTS = {"default": {"reject_rules": ["720"], "apply_rules": ["1080"]}}
+        self.DEFAULT_SOURCE = 'https://nyaa.si/?page=rss&q=[];https://miobt.com/rss-[].xml;https://mikanani.me/RSS/Search?searchstr=[];https://dmhy.anoneko.com/topics/rss/rss.xml?keyword=[];https://www.tokyotosho.info/rss.php?terms=[]'
         self.other = {}
         super().__init__()
         self.fetch()
@@ -36,6 +37,7 @@ class Parameters(IEItem):
             'ARIA2_JSONRPC_TOKEN': self.ARIA2_JSONRPC_TOKEN,
             'JACKETT_API_LINK_LIST': self.JACKETT_API_LINK_LIST,
             'FILTER_DICTS': self.FILTER_DICTS,
+            'DEFAULT_SOURCE': self.DEFAULT_SOURCE,
             'other': self.other
         }
 
@@ -50,6 +52,7 @@ class Parameters(IEItem):
         self.ARIA2_JSONRPC_TOKEN = source_dict.get('ARIA2_JSONRPC_TOKEN', self.ARIA2_JSONRPC_TOKEN)
         self.JACKETT_API_LINK_LIST = source_dict.get('JACKETT_API_LINK_LIST', self.JACKETT_API_LINK_LIST)
         self.FILTER_DICTS = source_dict.get('FILTER_DICTS', self.FILTER_DICTS)
+        self.DEFAULT_SOURCE = source_dict.get('DEFAULT_SOURCE',self.DEFAULT_SOURCE)
         self.other = source_dict.get('other', self.other)
         return self
 

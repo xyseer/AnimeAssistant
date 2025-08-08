@@ -17,7 +17,7 @@ import string
 from datetime import timedelta
 from SubscribeCore import SubscribeCore
 from logging_module import Logger
-
+from parameters import Parameters
 
 def login_by_passwd(username: str, passwd: str) -> str:
     ss = DBManipulator()
@@ -109,12 +109,14 @@ def get_about_info() -> str:  # for about method
 
 def get_new_subscription_item(session: str = "defaultvalue") -> [MetadataItem, SubscriptionItem]:  # for add method
     if check_operation_is_legal(session, 3):
+        p=Parameters()
         new_id = getValidID()
         NameItem(new_id, f"new series {new_id}")
         DownloadItem(new_id, f"new series {new_id}",
-                     source='https://nyaa.si/?page=rss&q=[];https://miobt.com/rss-[].xml;https://dmhy.anoneko.com/topics/rss/rss.xml?keyword=[];https://www.tokyotosho.info/rss.php?terms=[]')
+                     source=p.DEFAULT_SOURCE)
         s = SubscriptionItem(new_id, f"new series {new_id}")
         m = MetadataItem(new_id, f"new series {new_id}", info="no information.")
+        del p
         return [m, s]
     else:
         return None
@@ -127,6 +129,7 @@ def delete_item(item_id: int, session: str = "defaultvalue") -> bool:
     if check_operation_is_legal(session, n_m.user_level):
         n_m.deleteItem()
         del n_m
+
         return True
     else:
         return False
@@ -193,12 +196,13 @@ def base64_to_file(b64_string: str, output_path: str):
 
 def import_items(import_list:list, session: str = "defaultvalue") -> list:
     if check_operation_is_legal(session, 3):
+        p=Parameters()
         import_items=[]
         for new_dict in import_list:
             new_dict["id"]=-1
             id = -1
             if not new_dict.get("source",""):
-                new_dict["source"]='https://nyaa.si/?page=rss&q=[];https://miobt.com/rss-[].xml;https://dmhy.anoneko.com/topics/rss/rss.xml?keyword=[];https://www.tokyotosho.info/rss.php?terms=[]'
+                new_dict["source"]=p.DEFAULT_SOURCE
             if not new_dict.get("directory",""):
                 new_dict['directory']=safe_filename(new_dict.get('name',''))
             if new_dict.get("img_base64",""):
@@ -210,6 +214,7 @@ def import_items(import_list:list, session: str = "defaultvalue") -> list:
             d = DownloadItem(id).from_dict(new_dict)
             m = MetadataItem(id).from_dict(new_dict)
             import_items.append((n, s, d, m))
+        del p
         return import_items
     else:
         return []
