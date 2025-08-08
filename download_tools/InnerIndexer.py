@@ -44,6 +44,13 @@ class InnerIndexer(IEDownloadMethod):
                         if resolve_regex_match(item_title, format_episode_str(self.downloaditem.nextUpdateEP),
                                                p.FILTER_DICTS.get(i,
                                                                   {"reject_rules": ["720"], "apply_rules": ["1080"]})):
+                            if item.get("link"):
+                                link = item.get("link")
+                                if re.search(r"\.torrent$|^magnet:",link):
+                                    a_d = Aria2(self.downloaditem, link)
+                                    if a_d.download():
+                                        return True
+
                             for link in item.get("links"):
                                 if link.get("type", "") == 'application/x-bittorrent':
                                     if link.get("href", "")!="":

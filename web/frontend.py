@@ -777,7 +777,7 @@ def setting():
         <td width="50%" align="center"><input type="number" value="{p.REGULAR_CHECK_SPAN}" class="text1" name="REGULAR_CHECK_SPAN">days</td>
       </tr>
         <tr height="60px">
-        <td width="50%" align="center">REGULAR_CHECK_SPAN</td>
+        <td width="50%" align="center">DEFAULT_SOURCE</td>
         <td width="50%" align="center"><input type="text" value="{p.DEFAULT_SOURCE}" class="text1" name="DEFAULT_SOURCE"></td>
       </tr>
         <tr height="60px">
