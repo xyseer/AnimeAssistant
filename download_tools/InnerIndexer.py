@@ -25,7 +25,7 @@ class InnerIndexer(IEDownloadMethod):
         p = Parameters()
         for i in self.downloaditem.filter_name:
             if checkExist(self.downloaditem.directory, format_episode_str(self.downloaditem.nextUpdateEP),
-                          p.FILTER_DICTS.get(i, {"reject_rules": ["720"], "apply_rules": ["1080"]})):
+                          p.FILTER_DICTS.get(i, {"reject_rules": ["720"], "apply_rules": ["1080"]}),self.downloaditem.name):
                 Logger().info(
                     f"InnerIndexer found {self.downloaditem.name}[{self.downloaditem.nextUpdateEP}] has already in your directory. Updated database and skipped.")
                 return True
@@ -43,7 +43,7 @@ class InnerIndexer(IEDownloadMethod):
                     for i in self.downloaditem.filter_name:
                         if resolve_regex_match(item_title, format_episode_str(self.downloaditem.nextUpdateEP),
                                                p.FILTER_DICTS.get(i,
-                                                                  {"reject_rules": ["720"], "apply_rules": ["1080"]})):
+                                                                  {"reject_rules": ["720"], "apply_rules": ["1080"]}),self.downloaditem.name):
                             if item.get("link"):
                                 link = item.get("link")
                                 if re.search(r"\.torrent$|^magnet:",link):
@@ -75,7 +75,7 @@ def format_episode_str(ep: int):
         return str(ep)
 
 
-def checkExist(directory, ep, filter_dict):
+def checkExist(directory, ep, filter_dict, ori_name):
     try:
         files = os.listdir(directory)
         for file in files:
@@ -83,14 +83,15 @@ def checkExist(directory, ep, filter_dict):
             if file_name == "" or file_name == ".":
                 continue
             else:
-                if resolve_regex_match(file_name, ep, filter_dict):
+                if resolve_regex_match(file_name, ep, filter_dict,ori_name):
                     return True
         return False
     except FileNotFoundError:
         return False
 
 
-def resolve_regex_match(title, ep: str, filter_dict):
+def resolve_regex_match(title, ep: str, filter_dict,ori_name:str):
+    title = title.replace(ori_name,'')
     for reject_rule in filter_dict.get("reject_rules", []):
         if re.search(reject_rule, title, re.I):
             return False
