@@ -8,6 +8,7 @@ WARNING: This is still a beta version. Please check the latest stable version un
 
 + Fix the delay deletion problem in the new subscription handler method.
 + Move default source links to DEFAULT_SOURCE in settings.
++ Support more feeds in InnerIndexer.
 
 
 ##### While, there are still some functions not available yet:
@@ -18,7 +19,7 @@ WARNING: This is still a beta version. Please check the latest stable version un
 Due to my lack of building beautiful front-end pages and some personal issues, this project won't get a frequent update as long as the basic functions working well. The version won't pass 1.0 either though it's kind of perfectly working for me.
 Thanks for all your supporting! Hope there will be a chance to make a big update in the future.
 
-### Latest:0.9b
+### 0.9b
 
 + Add EXPERIMENTAL flag for a not so that stable functions. Users who prefer an advanced features can toggle this flag by access `/experimental` and it shows the status of your current EXPERIMENTAL flag.
 

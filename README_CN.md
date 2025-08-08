@@ -28,6 +28,7 @@ AnimeAssistant上手非常简单。只需运行main.py或启动您的Docker容�
 
 + 修复了延时删除不能同步删除新订阅内核的任务问题
 + 将默认源地址移动到设置中的DEFAULT_SOURCE
++ InnerIndexer支持更多feeds
 
 ##### 现在还有一些功能不可用：
 

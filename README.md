@@ -26,6 +26,7 @@ WARNING: This is still a beta version. Please check the latest stable version un
 
 + Fix the delay deletion problem in the new subscription handler method.
 + Move default source links to DEFAULT_SOURCE in settings.
++ Support more feeds in InnerIndexer.
 
 
 
