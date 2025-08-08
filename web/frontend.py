@@ -697,6 +697,7 @@ def setting():
             p.REGULAR_CHECK_SPAN = request.form.get("REGULAR_CHECK_SPAN", p.REGULAR_CHECK_SPAN)
             p.LOG_DIR = request.form.get("LOG_DIR", p.LOG_DIR)
             p.ERROR_RETRY_SPAN = request.form.get("ERROR_RETRY_SPAN", p.ERROR_RETRY_SPAN)
+            p.DEFAULT_SOURCE = request.form.get("DEFAULT_SOURCE", p.DEFAULT_SOURCE)
             if request.form.get("JACKETT_API_LINK_LIST", ""):
                 tmp = request.form.get("JACKETT_API_LINK_LIST", "").split("\n")
                 result_tmp = []
@@ -774,6 +775,10 @@ def setting():
         <tr height="60px">
         <td width="50%" align="center">REGULAR_CHECK_SPAN</td>
         <td width="50%" align="center"><input type="number" value="{p.REGULAR_CHECK_SPAN}" class="text1" name="REGULAR_CHECK_SPAN">days</td>
+      </tr>
+        <tr height="60px">
+        <td width="50%" align="center">REGULAR_CHECK_SPAN</td>
+        <td width="50%" align="center"><input type="text" value="{p.DEFAULT_SOURCE}" class="text1" name="DEFAULT_SOURCE"></td>
       </tr>
         <tr height="60px">
         <td width="50%" align="center">LOG_DIR</td>
