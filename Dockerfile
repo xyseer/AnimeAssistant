@@ -1,7 +1,7 @@
 FROM python:3.13-slim
 
 LABEL image_name="xyseer/AnimeAssistant"
-LABEL version=0.9b
+LABEL version=0.9c
 LABEL description="xy-nas-tool/AnimeAssistant is a tool for anime series auto-subscription."
 
 WORKDIR /app
