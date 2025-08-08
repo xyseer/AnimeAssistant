@@ -1,4 +1,5 @@
-FROM python:3.13-slim
+ARG BASE_IMAGE=python:3.13-slim
+FROM ${BASE_IMAGE}
 
 LABEL image_name="xyseer/AnimeAssistant"
 LABEL version=0.9c
